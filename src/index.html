@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link href="../css/all.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link href="../css/vendor.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link href="../css/custom.css" rel="stylesheet" crossorigin="anonymous">
+</head>
+
+<body>
+  <div id="wrapper">test</div>
+</body>
+<script>window.exports = module.exports</script>
+<script type="text/tsx">
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import {AppContainer} from 'react-hot-loader';
+import { HashRouter } from 'react-router-dom';
+
+let render = () => {
+  const { App } = require('./app');
+
+  ReactDOM.render(<AppContainer><HashRouter basename={'/'}><App /></HashRouter></AppContainer>, document.getElementById('wrapper'));
+}
+
+render();
+if (module.hot) { module.hot.accept(render); }
+</script>
+
+</html>

@@ -1,0 +1,27 @@
+#content{
+    margin-top:15px;
+}
+
+.tabe-search-input{
+    padding: 5px 3px;
+}
+
+.table-sort-icon{
+    float: right;
+    cursor: pointer;
+}
+
+.table-sort-icon-transform{
+    float: right;
+    transform: rotate(180deg);
+    margin-top: 7px;
+}
+
+.btn-add-new{
+    float: right;
+}
+
+.notification-panel-icon{
+    margin: 0 5px;
+    font-size: 20px;
+}
