@@ -17,11 +17,15 @@
     margin-top: 7px;
 }
 
-.btn-add-new{
+.btn-add-new, .btn-back{
     float: right;
 }
 
 .notification-panel-icon{
     margin: 0 5px;
     font-size: 20px;
+}
+
+.mr-10{
+    margin-right: 10px;
 }

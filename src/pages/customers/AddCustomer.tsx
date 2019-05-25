@@ -4,8 +4,9 @@ import { Customer } from '../../models/Customer';
 import { observer } from 'mobx-react'
 import { observable } from 'mobx';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
+import { withRouter } from 'react-router';
 
-@observer export class AddCustomer extends React.Component<any, any>{
+@observer class AddCustomerImpl extends React.Component<any, any>{
     private model: Customer;
     @observable notificationPanel: any;
 
@@ -14,6 +15,7 @@ import { NotificationPanel, NotificationType } from '../../common/ui/Notificatio
 
         this.handleChange = this.handleChange.bind(this);
         this.addCustomer = this.addCustomer.bind(this);
+        this.onBackBtnClick = this.onBackBtnClick.bind(this);
 
         this.model = new Customer();
     }
@@ -23,12 +25,17 @@ import { NotificationPanel, NotificationType } from '../../common/ui/Notificatio
             {this.notificationPanel}
             <div className="card shadow mb-4">
                 <div className="card-header py-3">
-                    <h6 className="m-0 font-weight-bold text-primary">Добавяне на нов клиент</h6>
+                    <div className="row">
+                        <div className="col-9"><h4 className="m-0 font-weight-bold text-primary">Добавяне на нов клиент</h4></div>
+                        <div className="col-3">
+                            <a href="javascript:;" className="btn btn-outline-primary btn-back" onClick={this.onBackBtnClick}><i className="fas fa-arrow-left"></i></a>
+                        </div>
+                    </div>
                 </div>
                 <div className="card-body">
                     <div className="row">
                         <div className="col">
-                            <div className="form-row">
+                            <div className="form-row form-group">
                                 <div className="col-md-2">
                                     <label>Име</label>
                                     <input type="text" className="form-control" name="firstname" value={this.model.firstname} onChange={this.handleChange} />
@@ -50,13 +57,16 @@ import { NotificationPanel, NotificationType } from '../../common/ui/Notificatio
                                     <input type="text" className="form-control" name="phone" value={this.model.phone} onChange={this.handleChange} />
                                 </div>
                             </div>
-                            <br />
                             <a href="javascript://" onClick={this.addCustomer} className="btn btn-success btn-block"><i className="fas fa-fw fa-plus"></i> Добави</a>
                         </div>
                     </div>
                 </div>
             </div>
         </>
+    }
+
+    onBackBtnClick(){
+        this.props.history.goBack();
     }
 
     handleChange(e: any) {
@@ -74,3 +84,5 @@ import { NotificationPanel, NotificationType } from '../../common/ui/Notificatio
         })
     }
 }
+
+export const AddCustomer = withRouter(AddCustomerImpl);

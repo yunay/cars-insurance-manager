@@ -3,20 +3,20 @@ import { Customer } from '../models/Customer'
 import { Insurance, Installment } from '../models/Insurance';
 import { Insurer } from '../models/Insurer';
 
-export enum DbResponseType{
-    withError=1,
-    success=2
+export enum DbResponseType {
+    withError = 1,
+    success = 2
 }
 
-export class DataResult{
+export class DataResult {
 
-    constructor(responseType:DbResponseType = DbResponseType.success, data:any = null){
+    constructor(responseType: DbResponseType = DbResponseType.success, data: any = null) {
         this.reponseType = responseType;
         this.data = data;
     }
 
-    reponseType:DbResponseType
-    data:any
+    reponseType: DbResponseType
+    data: any
 }
 
 var db = {
@@ -40,7 +40,7 @@ export const DbContext = {
                 if (err)
                     console.error(err);
                 else
-                    resolve(new DataResult(DbResponseType.success,doc));
+                    resolve(new DataResult(DbResponseType.success, doc));
             });
         })
     },
@@ -55,16 +55,16 @@ export const DbContext = {
         console.error("Not Implemented")
     },
 
-    addInsurance: (clientId: string, insurarId: string, note: string, installments: Installment[]): Promise<DataResult> => {
+    addInsurance: (clientId: string, insurerId: string, note: string, installments: Installment[]): Promise<DataResult> => {
         let insuranceId = `${+new Date}_insurance`
-        let insurance = new Insurance(insuranceId, clientId,insurarId, note,installments);
+        let insurance = new Insurance(insuranceId, clientId, insurerId, note, installments);
 
         return new Promise((resolve) => {
             db.insurances.insert(insurance, (err, doc) => {
                 if (err)
                     console.error(err);
                 else
-                    resolve(new DataResult(DbResponseType.success,doc));
+                    resolve(new DataResult(DbResponseType.success, doc));
             });
         })
     },
@@ -88,7 +88,7 @@ export const DbContext = {
                 if (err)
                     console.error(err);
                 else
-                    resolve(new DataResult(DbResponseType.success,doc));
+                    resolve(new DataResult(DbResponseType.success, doc));
             });
         })
     },
