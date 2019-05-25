@@ -58,7 +58,7 @@ import { DbContext } from '../../data/DataStore';
                                     <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "200px" }}>Фамилия<i className="fas fa-fw fa-sort-down table-sort-icon-transform"></i></th>
                                     <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "200px" }}>Град / село<i className="fas fa-fw fa-sort-down table-sort-icon-transform"></i></th>
                                     <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "200px" }}>Телефон<i className="fas fa-fw fa-sort-down table-sort-icon-transform"></i></th>
-                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "100px" }}>Действия</th>
+                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "200px" }}>Действия</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,7 +71,13 @@ import { DbContext } from '../../data/DataStore';
                                                 <td>{customer.thirdname}</td>
                                                 <td>{customer.city}</td>
                                                 <td>{customer.phone}</td>
-                                                <td>1 2 3</td>
+                                                <td>
+                                                    <div className="d-flex justify-content-around">
+                                                        <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
+                                                        <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
+                                                        <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         })
                                         : null

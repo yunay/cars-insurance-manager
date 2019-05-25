@@ -27,9 +27,11 @@ export class InsurancesResults extends React.Component<any, any> {
                                     <td>Tokyo</td>
                                     <td>33</td>
                                     <td>
-                                        <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
-                                        <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
-                                        <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                        <div className="d-flex justify-content-around">
+                                            <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
+                                            <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
+                                            <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr role="row" className="even">
@@ -38,9 +40,11 @@ export class InsurancesResults extends React.Component<any, any> {
                                     <td>London</td>
                                     <td>47</td>
                                     <td>
-                                        <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
-                                        <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
-                                        <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                        <div className="d-flex justify-content-around">
+                                            <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
+                                            <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
+                                            <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr role="row" className="odd">
@@ -49,9 +53,11 @@ export class InsurancesResults extends React.Component<any, any> {
                                     <td>San Francisco</td>
                                     <td>66</td>
                                     <td>
-                                        <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
-                                        <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
-                                        <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                        <div className="d-flex justify-content-around">
+                                            <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
+                                            <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
+                                            <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr role="row" className="even">
@@ -60,9 +66,11 @@ export class InsurancesResults extends React.Component<any, any> {
                                     <td>London</td>
                                     <td>47</td>
                                     <td>
-                                        <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
-                                        <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
-                                        <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                        <div className="d-flex justify-content-around">
+                                            <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
+                                            <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
+                                            <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr role="row" className="odd">
@@ -71,9 +79,11 @@ export class InsurancesResults extends React.Component<any, any> {
                                     <td>San Francisco</td>
                                     <td>66</td>
                                     <td>
-                                        <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
-                                        <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
-                                        <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                        <div className="d-flex justify-content-around">
+                                            <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
+                                            <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
+                                            <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>

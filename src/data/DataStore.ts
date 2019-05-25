@@ -1,5 +1,7 @@
 import * as Datastore from 'nedb';
 import { Customer } from '../models/Customer'
+import { Insurance, Installment } from '../models/Insurance';
+import { Insurer } from '../models/Insurer';
 
 export enum DbResponseType{
     withError=1,
@@ -19,11 +21,13 @@ export class DataResult{
 
 var db = {
     customers: new Datastore({ filename: './src/data/customers.db' }),
-    insurances: new Datastore({ filename: './src/data/insurances.db' })
+    insurances: new Datastore({ filename: './src/data/insurances.db' }),
+    insurers: new Datastore({ filename: './src/data/insurers.db' })
 };
 
 db.customers.loadDatabase();
 db.insurances.loadDatabase();
+db.insurers.loadDatabase();
 
 export const DbContext = {
 
@@ -51,8 +55,18 @@ export const DbContext = {
         console.error("Not Implemented")
     },
 
-    addInsurance: () => {
-        console.error("Not Implemented")
+    addInsurance: (clientId: string, insurarId: string, note: string, installments: Installment[]): Promise<DataResult> => {
+        let insuranceId = `${+new Date}_insurance`
+        let insurance = new Insurance(insuranceId, clientId,insurarId, note,installments);
+
+        return new Promise((resolve) => {
+            db.insurances.insert(insurance, (err, doc) => {
+                if (err)
+                    console.error(err);
+                else
+                    resolve(new DataResult(DbResponseType.success,doc));
+            });
+        })
     },
 
     getInsurances: () => db.insurances.find({}),
@@ -62,6 +76,30 @@ export const DbContext = {
     },
 
     deleteInsurance: () => {
+        console.error("Not Implemented")
+    },
+
+    addInsurer: (name: string): Promise<DataResult> => {
+        let insurerId = `${+new Date}_insurer`;
+        let insurer = new Insurer(insurerId, name);
+
+        return new Promise((resolve) => {
+            db.insurers.insert(insurer, (err, doc) => {
+                if (err)
+                    console.error(err);
+                else
+                    resolve(new DataResult(DbResponseType.success,doc));
+            });
+        })
+    },
+
+    getInsurers: () => db.insurers.find({}),
+
+    updateInsurer: () => {
+        console.error("Not Implemented")
+    },
+
+    deleteInsurer: () => {
         console.error("Not Implemented")
     }
 }

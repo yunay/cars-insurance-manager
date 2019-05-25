@@ -1,7 +1,35 @@
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
+import { observer } from 'mobx-react';
+import { observable, runInAction } from 'mobx';
+import { DbContext } from '../../data/DataStore';
+import { Insurer } from '../../models/Insurer';
 
-export class Insurers extends React.Component<any, any> {
+@observer export class Insurers extends React.Component<any, any> {
+
+    @observable insurers: Insurer[];
+
+    constructor(props: any) {
+        super(props);
+
+        this.insurers = [];
+    }
+
+    componentDidMount() {
+        DbContext.getInsurers().exec((err, doc) => {
+            if (err) {
+
+            } else {
+                var dataArr = Object.keys(doc);
+
+                runInAction.bind(this)(() => {
+                    for (let index = 0; index < dataArr.length; index++) {
+                        this.insurers.push(doc[dataArr[index]]);
+                    }
+                })
+            }
+        })
+    }
 
     render() {
         return <div className="card shadow mb-4">
@@ -25,33 +53,27 @@ export class Insurers extends React.Component<any, any> {
                         <table className="table table-bordered dataTable" id="dataTable" style={{ width: "100%" }}>
                             <thead>
                                 <tr role="row">
-                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "200px" }}>Име<i className="fas fa-fw fa-sort-down table-sort-icon"></i></th>
-                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "200px" }}>Презиме<i className="fas fa-fw fa-sort-down table-sort-icon-transform"></i></th>
-                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "200px" }}>Фамилия<i className="fas fa-fw fa-sort-down table-sort-icon-transform"></i></th>
-                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "113px" }}>Телефон<i className="fas fa-fw fa-sort-down table-sort-icon-transform"></i></th>
-                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "206px" }}>Град<i className="fas fa-fw fa-sort-down table-sort-icon-transform"></i></th>
+                                    <th className="sorting" rowSpan={1} colSpan={1}>Име</th>
+                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "200px" }}>Действия</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr role="row" className="odd">
-                                    <td className="sorting_1">Airi Satou</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>33</td>
-                                    <td>2008/11/28</td>
-                                </tr><tr role="row" className="even">
-                                    <td className="sorting_1">Angelica Ramos</td>
-                                    <td>Chief Executive Officer (CEO)</td>
-                                    <td>London</td>
-                                    <td>47</td>
-                                    <td>2009/10/09</td>
-                                </tr><tr role="row" className="odd">
-                                    <td className="sorting_1">Ashton Cox</td>
-                                    <td>Junior Technical Author</td>
-                                    <td>San Francisco</td>
-                                    <td>66</td>
-                                    <td>2009/01/12</td>
-                                </tr>
+                                {
+                                    this.insurers && this.insurers.length > 0
+                                        ? this.insurers.map((insurer) => {
+                                            return <tr key={insurer.id}>
+                                                <td>{insurer.name}</td>
+                                                <td>
+                                                    <div className="d-flex justify-content-around">
+                                                        <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
+                                                        <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
+                                                        <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        })
+                                        : null
+                                }
                             </tbody>
                         </table>
                     </div>
