@@ -16,10 +16,10 @@ export class Installment{
 
 export class Insurance {
 
-    constructor(id: string = "", clientId: string = "", insurerId: string = "", note: string = "", installments:Installment[] = []) {
+    constructor(id: string = "", customerId: string = "", insurerId: string = "", note: string = "", installments:Installment[] = []) {
 
         this.id = id;
-        this.clientId = clientId;
+        this.customerId = customerId;
         this.insurerId = insurerId;
         this.createdOn = moment();
         this.note = note;
@@ -28,7 +28,7 @@ export class Insurance {
 
     @observable public id: string;
 
-    @observable public clientId: string;
+    @observable public customerId: string;
 
     @observable public insurerId: string;
 

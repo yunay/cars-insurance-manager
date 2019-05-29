@@ -55,9 +55,9 @@ export const DbContext = {
         console.error("Not Implemented")
     },
 
-    addInsurance: (clientId: string, insurerId: string, note: string, installments: Installment[]): Promise<DataResult> => {
+    addInsurance: (customerId: string, insurerId: string, note: string, installments: Installment[]): Promise<DataResult> => {
         let insuranceId = `${+new Date}_insurance`
-        let insurance = new Insurance(insuranceId, clientId, insurerId, note, installments);
+        let insurance = new Insurance(insuranceId, customerId, insurerId, note, installments);
 
         return new Promise((resolve) => {
             db.insurances.insert(insurance, (err, doc) => {

@@ -65,8 +65,8 @@ import { Insurer } from '../../models/Insurer';
                                                 <td>{insurer.name}</td>
                                                 <td>
                                                     <div className="d-flex justify-content-around">
-                                                        <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
-                                                        <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
+                                                        <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-info"></i></a>
+                                                        <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-edit"></i></a>
                                                         <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
                                                     </div>
                                                 </td>

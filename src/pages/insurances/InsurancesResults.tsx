@@ -28,60 +28,8 @@ export class InsurancesResults extends React.Component<any, any> {
                                     <td>33</td>
                                     <td>
                                         <div className="d-flex justify-content-around">
-                                            <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
-                                            <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
-                                            <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr role="row" className="even">
-                                    <td className="sorting_1">Angelica Ramos</td>
-                                    <td>Chief Executive Officer (CEO)</td>
-                                    <td>London</td>
-                                    <td>47</td>
-                                    <td>
-                                        <div className="d-flex justify-content-around">
-                                            <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
-                                            <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
-                                            <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr role="row" className="odd">
-                                    <td className="sorting_1">Ashton Cox</td>
-                                    <td>Junior Technical Author</td>
-                                    <td>San Francisco</td>
-                                    <td>66</td>
-                                    <td>
-                                        <div className="d-flex justify-content-around">
-                                            <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
-                                            <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
-                                            <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr role="row" className="even">
-                                    <td className="sorting_1">Angelica Ramos</td>
-                                    <td>Chief Executive Officer (CEO)</td>
-                                    <td>London</td>
-                                    <td>47</td>
-                                    <td>
-                                        <div className="d-flex justify-content-around">
-                                            <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
-                                            <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
-                                            <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr role="row" className="odd">
-                                    <td className="sorting_1">Ashton Cox</td>
-                                    <td>Junior Technical Author</td>
-                                    <td>San Francisco</td>
-                                    <td>66</td>
-                                    <td>
-                                        <div className="d-flex justify-content-around">
-                                            <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-check"></i></a>
-                                            <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-edit"></i></a>
+                                            <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-info"></i></a>
+                                            <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-edit"></i></a>
                                             <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
                                         </div>
                                     </td>
