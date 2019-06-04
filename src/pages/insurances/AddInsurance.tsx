@@ -8,7 +8,7 @@ import { DatePicker } from '../../common/ui/DatePicker';
 import { withRouter } from 'react-router';
 import { Customer } from '../../models/Customer';
 import { Insurer } from '../../models/Insurer';
-import * as AutoComplete from 'react-autocomplete';
+import { AutoComplete } from '../../common/ui/AutoComplete'
 
 @observer class AddInsuranceImpl extends React.Component<any, any>{
 
@@ -25,20 +25,19 @@ import * as AutoComplete from 'react-autocomplete';
         this.handleInstallmentChange = this.handleInstallmentChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
         this.addInsurance = this.addInsurance.bind(this);
+
         this.handleCustomerChange = this.handleCustomerChange.bind(this);
+        this.handleCustomerSelect = this.handleCustomerSelect.bind(this);
+        this.shouldCustomerRender = this.shouldCustomerRender.bind(this);
+        this.getCustomerValue = this.getCustomerValue.bind(this);
+        this.renderCustomer = this.renderCustomer.bind(this);
+
         this.addInstallment = this.addInstallment.bind(this);
         this.onBackBtnClick = this.onBackBtnClick.bind(this);
 
-        this.selectCustomer = this.selectCustomer.bind(this);
-        this.showCustomerValue = this.showCustomerValue.bind(this);
-        this.handleCustomerSelectOption = this.handleCustomerSelectOption.bind(this);
-
         this.currentInstallment = new Installment();
         this.model = new Insurance();
-
-        this.state = {
-            value: '',
-          }
+        this.initData();
     }
 
     render() {
@@ -55,31 +54,22 @@ import * as AutoComplete from 'react-autocomplete';
                 </div>
                 <div className="card-body">
                     <div className="form-row form-group">
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                             <label>Клиент</label>
-                            <AutoComplete
-                                items={[
-                                    { id: 'foo', label: 'foo' },
-                                    { id: 'bar', label: 'bar' },
-                                    { id: 'baz', label: 'baz' },
-                                ]}
-                                shouldItemRender={(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) > -1}
-                                getItemValue={item => item.label}
-                                renderItem={(item, highlighted) =>
-                                    <div
-                                        key={item.id}
-                                        style={{ backgroundColor: highlighted ? '#eee' : 'transparent' }}
-                                    >
-                                        {item.label}
-                                    </div>
-                                }
-                                value={this.state.value}
-                                onChange={e => this.setState({ value: e.target.value })}
-                                onSelect={value => this.setState({ value })}
+                            <div>
+                            <AutoComplete 
+                            items={this.customers && this.customers.length > 0 ? this.customers : null}
+                            getItemValue={this.getCustomerValue}
+                            onChange={this.handleCustomerChange}
+                            onSelect={this.handleCustomerSelect}
+                            shouldItemRender={this.shouldCustomerRender}
+                            renderItem={this.renderCustomer}
                             />
-                            <input type="text" className="form-control" name="clientId" value={this.model.customerId} onChange={this.handleChange} />
+                            </div>
                         </div>
-                        <div className="col-md-6">
+                    </div>
+                    <div className="form-row form-group">
+                        <div className="col-md-12">
                             <label>Застраховател</label>
                             <input type="text" className="form-control" name="insurerId" value={this.model.insurerId} onChange={this.handleChange} />
                         </div>
@@ -138,8 +128,6 @@ import * as AutoComplete from 'react-autocomplete';
         this.currentInstallment[e.target.value] = e.target.value;
     }
 
-
-
     handleChange(e: any) {
         this.model[e.target.name] = e.target.value;
     }
@@ -164,40 +152,76 @@ import * as AutoComplete from 'react-autocomplete';
         this.currentInstallment = new Installment();
     }
 
-    selectCustomer(value: string): Promise<Customer[]> {
-        var valueLowerCase = value.toLowerCase();
-        valueLowerCase = valueLowerCase.replace(/гр.\s+|с.\s+/, "");
+    //#region Customers AutoComplete
 
-        // return DbContext.getCustomers().exec((err, doc) => {
-        //     if (err) {
-
-        //     } else {
-        //         var dataArr = Object.keys(doc);
-
-        //         runInAction.bind(this)(() => {
-        //             for (let index = 0; index < dataArr.length; index++) {
-        //                 this.customers.push(doc[dataArr[index]]);
-        //             }
-        //         })
-        //     }
-        // })
-
-        return Promise.resolve([]);
+    handleCustomerSelect(value:any) {
+        console.log(value);
     }
 
-    showCustomerValue(value: Customer): string {
-        return value.firstname;
+    handleCustomerChange(value:any) {
+        console.log(value);
     }
 
-    @action handleCustomerSelectOption(value?: Customer) {
-        if (value) {
-
-        }
+    shouldCustomerRender(customer:Customer,value:any){
+        return customer.firstname.toLowerCase().indexOf(value.toLowerCase()) > -1
     }
 
-    handleCustomerChange() {
-        this.model.customerId = null;
+    getCustomerValue(customer:Customer){
+        return `${customer.firstname} ${customer.secondname} ${customer.thirdname} ${customer.city}`
     }
+
+    renderCustomer(customer:Customer){
+        return `${customer.firstname} ${customer.secondname} ${customer.thirdname} ${customer.city}`
+    }
+
+    //#endregion
+
+    //#region Insurers AutoComplete
+
+    //#endregion
+
+    //#region Init
+
+    initData(){
+        this.initCustomersData();
+        this.initInsurersData();
+    }
+
+    initCustomersData(){
+        DbContext.getCustomers().exec((err, doc) => {
+            if (err) {
+
+            } else {
+                var dataArr = Object.keys(doc);
+
+                runInAction.bind(this)(() => {
+                    this.customers = []
+                    for (let index = 0; index < dataArr.length; index++) {
+                        this.customers.push(doc[dataArr[index]]);
+                    }
+                })
+            }
+        })
+    }
+
+    initInsurersData(){
+        DbContext.getInsurers().exec((err, doc) => {
+            if (err) {
+
+            } else {
+                var dataArr = Object.keys(doc);
+
+                runInAction.bind(this)(() => {
+                    this.insurers = []
+                    for (let index = 0; index < dataArr.length; index++) {
+                        this.insurers.push(doc[dataArr[index]]);
+                    }
+                })
+            }
+        })
+    }
+
+    //#endregion
 }
 
 export const AddInsurance = withRouter(AddInsuranceImpl); 

@@ -30,25 +30,12 @@
     margin-right: 10px;
 }
 
-.autocomplete-dropdown > .autocomplete-dropdown-item{
+.autocomplete-dropdown-item{
     display: block;
     padding: 5px;
 }
 
-.autocomplete-dropdown{
-    max-height: 200px;
-    overflow-x: hidden;
-    display: block;
-    position: absolute;
-    width: 98%;
-    z-index: 100;
-    background: white;
-    box-shadow: 0px 1px 1px 1px #d1d3e2;
-    margin-top: 0px;
-    border-radius: 5px;
-}
-
-.autocomplete-dropdown-item:hover{
+.autocomplete-dropdown-item-highlighted{
     background: #4e73df;
     color: white;
     cursor: pointer;
