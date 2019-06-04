@@ -10,11 +10,12 @@ const menuStyle: React.CSSProperties = {
     width: '98%',
     zIndex: 100,
     background: 'white',
-    boxShadow: '0px 1px 1px 1px #d1d3e2',
     marginTop: '0',
     borderRadius: '5px',
-    top:0,
-    left:0
+    left: 5,
+    top: 70,
+    position:'absolute',
+    border: '1px solid rgba(90, 92, 105, 0.23)'
 }
 
 interface AutoCompleteProps {
@@ -44,7 +45,7 @@ interface AutoCompleteProps {
             wrapperProps={{ className: 'd-block' }}
             inputProps={{ className: 'form-control' }}
             menuStyle={menuStyle}
-            items={this.props.items ? this.props.items : null}
+            items={this.props.items ? this.props.items : []}
             shouldItemRender={this.shouldItemRender}
             getItemValue={this.getItemValue}
             renderItem={this.renderItem}

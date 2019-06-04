@@ -32,6 +32,12 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
         this.getCustomerValue = this.getCustomerValue.bind(this);
         this.renderCustomer = this.renderCustomer.bind(this);
 
+        this.handleInsurerChange = this.handleInsurerChange.bind(this);
+        this.handleInsurerSelect = this.handleInsurerSelect.bind(this);
+        this.shouldInsurerRender = this.shouldInsurerRender.bind(this);
+        this.getInsurerValue = this.getInsurerValue.bind(this);
+        this.renderInsurer = this.renderInsurer.bind(this);
+
         this.addInstallment = this.addInstallment.bind(this);
         this.onBackBtnClick = this.onBackBtnClick.bind(this);
 
@@ -54,7 +60,7 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
                 </div>
                 <div className="card-body">
                     <div className="form-row form-group">
-                        <div className="col-md-12">
+                        <div className="col-md-5">
                             <label>Клиент</label>
                             <div>
                             <AutoComplete 
@@ -67,11 +73,20 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
                             />
                             </div>
                         </div>
-                    </div>
-                    <div className="form-row form-group">
-                        <div className="col-md-12">
+                        <div className="col-md-5">
                             <label>Застраховател</label>
-                            <input type="text" className="form-control" name="insurerId" value={this.model.insurerId} onChange={this.handleChange} />
+                            <AutoComplete 
+                            items={this.insurers && this.insurers.length > 0 ? this.insurers : null}
+                            getItemValue={this.getInsurerValue}
+                            onChange={this.handleInsurerChange}
+                            onSelect={this.handleInsurerSelect}
+                            shouldItemRender={this.shouldInsurerRender}
+                            renderItem={this.renderInsurer}
+                            />
+                        </div>
+                        <div className="col-md-2">
+                        <label>Рег. номер</label>
+                        <input type="text" className="form-control  "/>
                         </div>
                     </div>
                     <div className="form-row form-group">
@@ -172,6 +187,26 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
 
     renderCustomer(customer:Customer){
         return `${customer.firstname} ${customer.secondname} ${customer.thirdname} ${customer.city}`
+    }
+
+    handleInsurerSelect(value:any) {
+        console.log(value);
+    }
+
+    handleInsurerChange(value:any) {
+        console.log(value);
+    }
+
+    shouldInsurerRender(insurer:Insurer,value:any){
+        return insurer.name.toLowerCase().indexOf(value.toLowerCase()) > -1
+    }
+
+    getInsurerValue(insurer:Insurer){
+        return `${insurer.name}`
+    }
+
+    renderInsurer(insurer:Insurer){
+        return `${insurer.name}`
     }
 
     //#endregion
