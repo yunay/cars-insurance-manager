@@ -31,9 +31,9 @@ db.insurers.loadDatabase();
 
 export const DbContext = {
 
-    addCustomer: (carRegNumber:string[] ,firstName: string, secondname: string, thirdname: string, phone: string, city: string): Promise<DataResult> => {
+    addCustomer: (carRegNumber: string[], firstName: string, secondname: string, thirdname: string, phone: string, city: string): Promise<DataResult> => {
         let customerId = `${+new Date}_customer`
-        let customer = new Customer(carRegNumber,customerId, firstName, secondname, thirdname, phone, city);
+        let customer = new Customer(carRegNumber, customerId, firstName, secondname, thirdname, phone, city);
 
         return new Promise((resolve) => {
             db.customers.insert(customer, (err, doc) => {
@@ -47,12 +47,22 @@ export const DbContext = {
 
     getCustomers: () => db.customers.find({}),
 
-    updateCustomer: () => {
-        console.error("Not Implemented")
+    getCustomerById: (customerId:string) => db.customers.find({id:customerId}),
+
+    updateCustomer: (customerId: string, customer: Customer): Promise<DataResult> => {
+
+        return new Promise((resolve) => {
+            db.customers.update({ id: customerId }, customer, { multi: true }, (err, doc) => {
+                if (err)
+                    console.error(err);
+                else
+                    resolve(new DataResult(DbResponseType.success, null));
+            })
+        })
     },
 
-    deleteCustomers: () => {
-        console.error("Not Implemented")
+    removeCustomerById: (customerId: string) => {
+        db.customers.remove({ id: customerId })
     },
 
     addInsurance: (customerId: string, insurerId: string, note: string, installments: Installment[]): Promise<DataResult> => {
@@ -75,8 +85,8 @@ export const DbContext = {
         console.error("Not Implemented")
     },
 
-    deleteInsurance: () => {
-        console.error("Not Implemented")
+    removeInsuranceById: (insuranceId: string) => {
+        db.insurances.remove({ id: insuranceId })
     },
 
     addInsurer: (name: string): Promise<DataResult> => {
@@ -95,11 +105,21 @@ export const DbContext = {
 
     getInsurers: () => db.insurers.find({}),
 
-    updateInsurer: () => {
-        console.error("Not Implemented")
+    getInsurerById: (insurerId: string) => db.insurers.find({ id: insurerId }),
+
+    updateInsurer: (insurerId: string, insurer: Insurer): Promise<DataResult> => {
+
+        return new Promise((resolve) => {
+            db.insurers.update({ id: insurerId }, insurer, { multi: true }, (err, doc) => {
+                if (err)
+                    console.error(err);
+                else
+                    resolve(new DataResult(DbResponseType.success, null));
+            })
+        })
     },
 
-    deleteInsurer: () => {
-        console.error("Not Implemented")
+    removeInsurerById: (insurerId: string) => {
+        db.insurers.remove({ id: insurerId })
     }
 }

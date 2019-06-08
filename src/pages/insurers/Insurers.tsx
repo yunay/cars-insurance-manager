@@ -5,6 +5,7 @@ import { observable, runInAction } from 'mobx';
 import { DbContext } from '../../data/DataStore';
 import { Insurer } from '../../models/Insurer';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
+import { confirmAlert } from 'react-confirm-alert';
 
 @observer export class Insurers extends React.Component<any, any> {
 
@@ -14,24 +15,10 @@ import { NotificationPanel, NotificationType } from '../../common/ui/Notificatio
     constructor(props: any) {
         super(props);
 
-        this.insurers = [];
     }
 
     componentDidMount() {
-        DbContext.getInsurers().exec((err, doc) => {
-            if (err) {
-
-            } else {
-                var dataArr = Object.keys(doc);
-
-                runInAction.bind(this)(() => {
-                    this.alreadySearched = true;
-                    for (let index = 0; index < dataArr.length; index++) {
-                        this.insurers.push(doc[dataArr[index]]);
-                    }
-                })
-            }
-        })
+        this.loadInsurers();
     }
 
     render() {
@@ -71,9 +58,10 @@ import { NotificationPanel, NotificationType } from '../../common/ui/Notificatio
                                                             <td>{insurer.name}</td>
                                                             <td>
                                                                 <div className="d-flex justify-content-around">
-                                                                    <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-info"></i></a>
-                                                                    <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-edit"></i></a>
-                                                                    <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                                                    <NavLink to={`/update-insurer/${insurer.id}`} className="btn btn-success btn-circle btn-sm">
+                                                                        <i className="fas fa-edit"></i>
+                                                                    </NavLink>
+                                                                    <a href="javascript:;" className="btn btn-danger btn-circle btn-sm" onClick={this.removeInsurer.bind(this, insurer.id)}><i className="fas fa-trash"></i></a>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -89,5 +77,43 @@ import { NotificationPanel, NotificationType } from '../../common/ui/Notificatio
                 </div>
             </div>
         </div>
+    }
+
+    removeInsurer(insurerId: string) {
+        confirmAlert({
+            message: 'Сигурен ли сте, че искате да изтриете записа?',
+            buttons: [
+                {
+                    label: 'Да',
+                    onClick: () => {
+                        DbContext.removeInsurerById(insurerId);
+                        this.loadInsurers();
+                    }
+                },
+                {
+                    label: 'Не',
+                    onClick: () => { }
+                }
+            ]
+        });
+
+    }
+
+    loadInsurers() {
+        DbContext.getInsurers().exec((err, doc) => {
+            if (err) {
+
+            } else {
+                var dataArr = Object.keys(doc);
+                this.insurers = [];
+
+                runInAction.bind(this)(() => {
+                    this.alreadySearched = true;
+                    for (let index = 0; index < dataArr.length; index++) {
+                        this.insurers.push(doc[dataArr[index]]);
+                    }
+                })
+            }
+        })
     }
 }

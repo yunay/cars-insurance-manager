@@ -7,7 +7,9 @@ import { AddCustomer } from './pages/customers/AddCustomer';
 import { Dashboard } from './pages/dashboard/Dashboard'
 import { AddInsurance } from './pages/insurances/AddInsurance';
 import { AddInsurer } from './pages/insurers/AddInsurer';
+import { UpdateInsurer } from './pages/insurers/UpdateInsurer';
 import { Insurers } from './pages/insurers/Insurers';
+import { UpdateCustomer } from './pages/customers/UpdateCustomer';
 
 export class App extends React.Component<any, any> {
 
@@ -20,6 +22,8 @@ export class App extends React.Component<any, any> {
       <Route exact path='/add-insurance' component={AddInsurance} />
       <Route exact path='/insurers' component={Insurers} />
       <Route exact path='/add-insurer' component={AddInsurer} />
+      <Route exact path='/update-insurer/:insurerId' component={UpdateInsurer} />
+      <Route exact path='/update-customer/:customerId' component={UpdateCustomer} />
     </Layout>);
   }
 }

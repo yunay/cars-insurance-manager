@@ -47,22 +47,3 @@ class HeaderImpl extends React.Component<any, any> {
 }
 
 export const Header = withRouter(HeaderImpl);
-
-
-// const Header = () => {
-//   return <header>
-//     <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark bg-main">
-//       <a className="navbar-brand" href="javascript:;"><img src="../images/car-logo.png" width={80} /></a>
-//       <ul className="navbar-nav mr-auto">
-//         <li className="nav-item">
-//           <NavLink className="nav-link" to={"/"} activeClassName={'active'} exact>Застраховки</NavLink>
-//         </li>
-//         <li className="nav-item">
-//           <NavLink className="nav-link" to={"/customers"} activeClassName={'active'} exact>Клиенти</NavLink>
-//         </li>
-//       </ul>
-//     </nav>
-//   </header>
-// }
-
-// export default Header;
