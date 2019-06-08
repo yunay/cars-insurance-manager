@@ -44,7 +44,7 @@ interface NotificationPanelProps {
         switch(this.props.notificationType){
             case NotificationType.success: return 'far fa-thumbs-up';
             case NotificationType.primary: return 'far fa-smile';
-            case NotificationType.info: return 'far fa-info';
+            case NotificationType.info: return 'fas fa-info-circle';
             case NotificationType.warning: return 'fas fa-exclamation-triangle';
             case NotificationType.danger: return 'fas fa-exclamation-circle';
         }

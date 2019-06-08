@@ -40,3 +40,21 @@
     color: white;
     cursor: pointer;
 }
+
+.car-reg-number{
+    padding: 3px 10px;
+    border: 1px solid black;
+    color: black;
+    font-weight: bold;
+    display: inline-block;
+    border-radius: 2px;
+    box-shadow: 0px 0px 3px 0px grey;
+    margin: 2px 0 0 0;
+}
+
+.remove-reg-number{
+    display: inline-block;
+    position: absolute;
+    color: red;
+    margin: 4px 8px;
+}

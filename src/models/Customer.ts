@@ -2,7 +2,7 @@ import { observable } from 'mobx';
 
 export class Customer {
 
-    constructor(id: string = "", firstname: string = "", secondname: string = "", thirdname: string = "", phone: string = "", city: string = "") {
+    constructor(carRegistrationNumbers:string[] = [], id: string = "", firstname: string = "", secondname: string = "", thirdname: string = "", phone: string = "", city: string = "") {
 
         this.id = id;
         this.firstname = firstname;
@@ -10,6 +10,7 @@ export class Customer {
         this.thirdname = thirdname;
         this.phone = phone;
         this.city = city;
+        this.carRegistrationNumbers = carRegistrationNumbers;
     }
 
     @observable public id: string;
@@ -23,4 +24,6 @@ export class Customer {
     @observable public phone: string;
 
     @observable public city: string;
+
+    @observable public carRegistrationNumbers: string[];
 }

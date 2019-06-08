@@ -4,9 +4,11 @@ import { observer } from 'mobx-react';
 import { observable, runInAction } from 'mobx';
 import { DbContext } from '../../data/DataStore';
 import { Insurer } from '../../models/Insurer';
+import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
 
 @observer export class Insurers extends React.Component<any, any> {
 
+    @observable alreadySearched: boolean = false;
     @observable insurers: Insurer[];
 
     constructor(props: any) {
@@ -23,6 +25,7 @@ import { Insurer } from '../../models/Insurer';
                 var dataArr = Object.keys(doc);
 
                 runInAction.bind(this)(() => {
+                    this.alreadySearched = true;
                     for (let index = 0; index < dataArr.length; index++) {
                         this.insurers.push(doc[dataArr[index]]);
                     }
@@ -49,34 +52,39 @@ import { Insurer } from '../../models/Insurer';
             </div>
             <div className="card-body">
                 <div id="dataTable_wrapper" className="dataTables_wrapper dt-bootstrap4">
-                    <div className="row"><div className="col-sm-12">
-                        <table className="table table-bordered dataTable" id="dataTable" style={{ width: "100%" }}>
-                            <thead>
-                                <tr role="row">
-                                    <th className="sorting" rowSpan={1} colSpan={1}>Име</th>
-                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "200px" }}>Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    this.insurers && this.insurers.length > 0
-                                        ? this.insurers.map((insurer) => {
-                                            return <tr key={insurer.id}>
-                                                <td>{insurer.name}</td>
-                                                <td>
-                                                    <div className="d-flex justify-content-around">
-                                                        <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-info"></i></a>
-                                                        <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-edit"></i></a>
-                                                        <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        })
-                                        : null
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                    <div className="row">
+                        <div className="col-sm-12">
+                            {
+                                this.alreadySearched
+                                    ? this.insurers && this.insurers.length > 0
+                                        ? <table className="table table-bordered dataTable" id="dataTable" style={{ width: "100%" }}>
+                                            <thead>
+                                                <tr role="row">
+                                                    <th className="sorting" rowSpan={1} colSpan={1}>Име</th>
+                                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "200px" }}>Действия</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    this.insurers.map((insurer) => {
+                                                        return <tr key={insurer.id}>
+                                                            <td>{insurer.name}</td>
+                                                            <td>
+                                                                <div className="d-flex justify-content-around">
+                                                                    <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-info"></i></a>
+                                                                    <a href="javascript:;" className="btn btn-success btn-circle btn-sm"><i className="fas fa-edit"></i></a>
+                                                                    <a href="javascript:;" className="btn btn-danger btn-circle btn-sm"><i className="fas fa-trash"></i></a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                        : <NotificationPanel notificationType={NotificationType.info} text={"Няма намерени застрахователи"} isDismisable={false} />
+                                    : null
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

@@ -8,7 +8,9 @@ import { withRouter } from 'react-router';
 
 @observer class AddCustomerImpl extends React.Component<any, any>{
     private model: Customer;
+
     @observable notificationPanel: any;
+    @observable currentCarRegNumber: string;
 
     constructor(props: any) {
         super(props);
@@ -16,8 +18,11 @@ import { withRouter } from 'react-router';
         this.handleChange = this.handleChange.bind(this);
         this.addCustomer = this.addCustomer.bind(this);
         this.onBackBtnClick = this.onBackBtnClick.bind(this);
+        this.addCarRegNumber = this.addCarRegNumber.bind(this);
+        this.handleCarRegNumberChange = this.handleCarRegNumberChange.bind(this);
 
         this.model = new Customer();
+        this.currentCarRegNumber = "";
     }
 
     render() {
@@ -57,6 +62,37 @@ import { withRouter } from 'react-router';
                                     <input type="text" className="form-control" name="phone" value={this.model.phone} onChange={this.handleChange} />
                                 </div>
                             </div>
+                            {
+                                this.model.carRegistrationNumbers && this.model.carRegistrationNumbers.length > 0
+                                    ? <div className="form-row form-group">
+                                        <div className="col-md-12">
+                                            <div>Записани регистрационни номера на клиента:</div>
+                                            {
+                                                this.model.carRegistrationNumbers.map((carRegNumber, index) => {
+                                                    return <div key={index}>
+                                                        <div className="car-reg-number">{carRegNumber}</div>
+                                                        <button type="button" className="close remove-reg-number" onClick={this.removeCarRegNumber.bind(this,index)}>
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                })
+                                            }
+                                        </div>
+                                    </div>
+                                    : null
+                            }
+                            <div className="form-row form-group">
+                                <div className="mr-10">
+                                    <label>Регистрационен № на превозно средство</label>
+                                    <input type="text" className="form-control" name="value" value={this.currentCarRegNumber} onChange={this.handleCarRegNumberChange} />
+                                </div>
+                                <div>
+                                    <label>&nbsp;</label>
+                                    <div>
+                                        <a href="javascript://" onClick={this.addCarRegNumber} className="btn btn-success"><i className="fas fa-fw fa-plus"></i> Добави регистрационен №</a>
+                                    </div>
+                                </div>
+                            </div>
                             <a href="javascript://" onClick={this.addCustomer} className="btn btn-success btn-block"><i className="fas fa-fw fa-plus"></i> Добави</a>
                         </div>
                     </div>
@@ -65,7 +101,7 @@ import { withRouter } from 'react-router';
         </>
     }
 
-    onBackBtnClick(){
+    onBackBtnClick() {
         this.props.history.goBack();
     }
 
@@ -73,8 +109,20 @@ import { withRouter } from 'react-router';
         this.model[e.target.name] = e.target.value;
     }
 
+    addCarRegNumber() {
+        this.model.carRegistrationNumbers.push(this.currentCarRegNumber);
+    }
+
+    removeCarRegNumber(index:number){
+        this.model.carRegistrationNumbers.splice(index,1)
+    }
+
+    handleCarRegNumberChange(e: any) {
+        this.currentCarRegNumber = e.target.value;
+    }
+
     addCustomer() {
-        DbContext.addCustomer(this.model.firstname, this.model.secondname, this.model.thirdname, this.model.phone, this.model.city).then((response) => {
+        DbContext.addCustomer(this.model.carRegistrationNumbers, this.model.firstname, this.model.secondname, this.model.thirdname, this.model.phone, this.model.city).then((response) => {
 
             let notificationKey = `${+new Date()}_notificationKey`
             if (response.reponseType == DbResponseType.success)

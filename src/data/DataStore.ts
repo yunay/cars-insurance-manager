@@ -31,9 +31,9 @@ db.insurers.loadDatabase();
 
 export const DbContext = {
 
-    addCustomer: (firstName: string, secondname: string, thirdname: string, phone: string, city: string): Promise<DataResult> => {
+    addCustomer: (carRegNumber:string[] ,firstName: string, secondname: string, thirdname: string, phone: string, city: string): Promise<DataResult> => {
         let customerId = `${+new Date}_customer`
-        let customer = new Customer(customerId, firstName, secondname, thirdname, phone, city);
+        let customer = new Customer(carRegNumber,customerId, firstName, secondname, thirdname, phone, city);
 
         return new Promise((resolve) => {
             db.customers.insert(customer, (err, doc) => {
