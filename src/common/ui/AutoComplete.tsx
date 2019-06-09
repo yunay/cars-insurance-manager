@@ -29,6 +29,7 @@ interface AutoCompleteProps {
 
 @observer export class AutoComplete extends React.Component<AutoCompleteProps, any> {
     @observable inputValue: string = '';
+    private isSelected:boolean;
 
     constructor(props: AutoCompleteProps) {
         super(props)
@@ -38,6 +39,7 @@ interface AutoCompleteProps {
         this.shouldItemRender = this.shouldItemRender.bind(this);
         this.getItemValue = this.getItemValue.bind(this);
         this.renderItem = this.renderItem.bind(this);
+        this.onMenuVisibilityChange = this.onMenuVisibilityChange.bind(this);
     }
 
     render() {
@@ -47,16 +49,17 @@ interface AutoCompleteProps {
             menuStyle={menuStyle}
             items={this.props.items ? this.props.items : []}
             shouldItemRender={this.shouldItemRender}
-            getItemValue={this.getItemValue}
+            getItemValue={(this.getItemValue)}
             renderItem={this.renderItem}
             value={this.inputValue}
             onChange={this.handleChange}
             onSelect={this.onSelect}
+            onMenuVisibilityChange={this.onMenuVisibilityChange}
         />
     }
 
     getItemValue(item: any) {
-        return this.props.getItemValue(item)
+        return item.id;
     }
 
     shouldItemRender(item: any, value: any) {
@@ -64,24 +67,26 @@ interface AutoCompleteProps {
     }
 
     handleChange(e: any) {
+        this.isSelected = false;
         this.inputValue = e.target.value;
         this.props.onChange(e.target.value);
     }
 
     renderItem(item: any, highlighted: boolean) {
-        return <span key={item.key} className={`autocomplete-dropdown-item ${highlighted ? 'autocomplete-dropdown-item-highlighted' : ''}`} 
-        onClick={(this.handleSelect.bind(this, item))}>
+        return <span key={item.id} className={`autocomplete-dropdown-item ${highlighted ? 'autocomplete-dropdown-item-highlighted' : ''}`}>
                 {this.props.renderItem(item)}
             </span>
     }
 
-    onSelect(e: any) {
-        this.inputValue = e;
+    onSelect(itemId: any) {
+        let selectedItem = this.props.items.filter(x=>x.id == itemId)[0];
+        this.isSelected = true;
+        this.inputValue = this.props.getItemValue(selectedItem);
+        this.props.onSelect(selectedItem);
     }
 
-    handleSelect(e: any, highlighted: any) {
-        console.log('test');
-        console.log(highlighted);
-        this.props.onSelect(e);
+    onMenuVisibilityChange(isOpen:boolean){
+        if(!isOpen && !this.isSelected)
+            this.inputValue = "";
     }
 }

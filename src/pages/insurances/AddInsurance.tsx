@@ -86,7 +86,7 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
                         </div>
                         <div className="col-md-2">
                         <label>Рег. номер</label>
-                        <input type="text" className="form-control  "/>
+                        <input type="text" className="form-control" disabled={this.model.customerId ? false : true}/>
                         </div>
                     </div>
                     <div className="form-row form-group">
@@ -140,7 +140,7 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
     }
 
     handleInstallmentChange(e: any) {
-        this.currentInstallment[e.target.value] = e.target.value;
+        this.currentInstallment[e.target.name] = e.target.value;
     }
 
     handleChange(e: any) {
@@ -169,12 +169,13 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
 
     //#region Customers AutoComplete
 
-    handleCustomerSelect(value:any) {
-        console.log(value);
+    handleCustomerSelect(customer:Customer) {
+        this.model.customerId = customer.id;
     }
 
     handleCustomerChange(value:any) {
-        console.log(value);
+        if(this.model.customerId != "")
+            this.model.customerId = "";
     }
 
     shouldCustomerRender(customer:Customer,value:any){
@@ -189,12 +190,17 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
         return `${customer.firstname} ${customer.secondname} ${customer.thirdname} ${customer.city}`
     }
 
-    handleInsurerSelect(value:any) {
-        console.log(value);
+    //#endregion
+
+    //#region Insurers AutoComplete
+
+    handleInsurerSelect(insurer:Insurance) {
+        this.model.insurerId = insurer.id;
     }
 
     handleInsurerChange(value:any) {
-        console.log(value);
+        if(this.model.insurerId != "")
+            this.model.insurerId = "";
     }
 
     shouldInsurerRender(insurer:Insurer,value:any){
@@ -208,10 +214,6 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
     renderInsurer(insurer:Insurer){
         return `${insurer.name}`
     }
-
-    //#endregion
-
-    //#region Insurers AutoComplete
 
     //#endregion
 
