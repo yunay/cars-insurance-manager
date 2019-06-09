@@ -66,7 +66,9 @@ import { confirmAlert } from 'react-confirm-alert';
                                                             <td>{customer.phone}</td>
                                                             <td>
                                                                 <div className="d-flex justify-content-around">
-                                                                    <a href="javascript:;" className="btn btn-primary btn-circle btn-sm"><i className="fas fa-info"></i></a>
+                                                                    <NavLink to={`/customer-info/${customer.id}`} className="btn btn-primary btn-circle btn-sm">
+                                                                        <i className="fas fa-info"></i>
+                                                                    </NavLink>
                                                                     <NavLink to={`/update-customer/${customer.id}`} className="btn btn-success btn-circle btn-sm">
                                                                         <i className="fas fa-edit"></i>
                                                                     </NavLink>

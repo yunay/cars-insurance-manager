@@ -10,6 +10,7 @@ import { AddInsurer } from './pages/insurers/AddInsurer';
 import { UpdateInsurer } from './pages/insurers/UpdateInsurer';
 import { Insurers } from './pages/insurers/Insurers';
 import { UpdateCustomer } from './pages/customers/UpdateCustomer';
+import { CustomerInfo } from './pages/customers/CustomerInfo';
 
 export class App extends React.Component<any, any> {
 
@@ -24,6 +25,7 @@ export class App extends React.Component<any, any> {
       <Route exact path='/add-insurer' component={AddInsurer} />
       <Route exact path='/update-insurer/:insurerId' component={UpdateInsurer} />
       <Route exact path='/update-customer/:customerId' component={UpdateCustomer} />
+      <Route exact path='/customer-info/:customerId' component={CustomerInfo} />
     </Layout>);
   }
 }
