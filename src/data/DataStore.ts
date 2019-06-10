@@ -1,6 +1,6 @@
 import * as Datastore from 'nedb';
 import { Customer } from '../models/Customer'
-import { Insurance, Installment } from '../models/Insurance';
+import { Insurance } from '../models/Insurance';
 import { Insurer } from '../models/Insurer';
 
 export enum DbResponseType {
@@ -31,9 +31,8 @@ db.insurers.loadDatabase();
 
 export const DbContext = {
 
-    addCustomer: (carRegNumber: string[], firstName: string, secondname: string, thirdname: string, phone: string, city: string): Promise<DataResult> => {
-        let customerId = `${+new Date}_customer`
-        let customer = new Customer(carRegNumber, customerId, firstName, secondname, thirdname, phone, city);
+    addCustomer: (customer:Customer): Promise<DataResult> => {
+        customer.id = `${+new Date}_customer`
 
         return new Promise((resolve) => {
             db.customers.insert(customer, (err, doc) => {
@@ -45,9 +44,7 @@ export const DbContext = {
         })
     },
 
-    getCustomers: () => db.customers.find({}),
-
-    getCustomerById: (customerId:string) => db.customers.find({id:customerId}),
+    getCustomers: (query?:any) => query ? db.customers.find(query) : db.customers.find({}),
 
     updateCustomer: (customerId: string, customer: Customer): Promise<DataResult> => {
 
@@ -65,9 +62,8 @@ export const DbContext = {
         db.customers.remove({ id: customerId })
     },
 
-    addInsurance: (customerId: string, insurerId: string, note: string, installments: Installment[]): Promise<DataResult> => {
-        let insuranceId = `${+new Date}_insurance`
-        let insurance = new Insurance(insuranceId, customerId, insurerId, note, installments);
+    addInsurance: (insurance:Insurance): Promise<DataResult> => {
+        insurance.id = `${+new Date}_insurance`
 
         return new Promise((resolve) => {
             db.insurances.insert(insurance, (err, doc) => {
@@ -89,9 +85,8 @@ export const DbContext = {
         db.insurances.remove({ id: insuranceId })
     },
 
-    addInsurer: (name: string): Promise<DataResult> => {
-        let insurerId = `${+new Date}_insurer`;
-        let insurer = new Insurer(insurerId, name);
+    addInsurer: (insurer: Insurer): Promise<DataResult> => {
+        insurer.id = `${+new Date}_insurer`;
 
         return new Promise((resolve) => {
             db.insurers.insert(insurer, (err, doc) => {

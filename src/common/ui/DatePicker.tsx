@@ -5,7 +5,7 @@ import * as moment from 'moment';
 
 interface DatePickerProps {
     onChange: (e: any) => void;
-    value: moment.Moment;
+    value: moment.Moment | Date;
 }
 
 export class DatePicker extends React.Component<DatePickerProps, any>{

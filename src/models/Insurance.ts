@@ -4,26 +4,27 @@ import * as moment from 'moment';
 /**Вноски */
 export class Installment{
 
-    constructor(value:number = 0, date:moment.Moment = moment()){
+    constructor(value:number = 0, date = moment().toDate()){
         this.value = value;
         this.date = date;
     }
 
     @observable public value: number;
 
-    @observable public date: moment.Moment;
+    @observable public date: Date;
 }
 
 export class Insurance {
 
-    constructor(id: string = "", customerId: string = "", insurerId: string = "", note: string = "", installments:Installment[] = []) {
+    constructor(id: string = "", customerId: string = "", insurerId: string = "", note: string = "", installments:Installment[] = [], carRegNumber:string = "") {
 
         this.id = id;
         this.customerId = customerId;
         this.insurerId = insurerId;
-        this.createdOn = moment();
+        this.createdOn = moment().toDate();
         this.note = note;
         this.installments = installments;
+        this.carRegNumber = carRegNumber;
     }
 
     @observable public id: string;
@@ -32,9 +33,11 @@ export class Insurance {
 
     @observable public insurerId: string;
 
-    @observable public createdOn: moment.Moment;
+    @observable public createdOn: Date;
 
     @observable public note: string;
 
     @observable public installments: Installment[];
+
+    @observable public carRegNumber: string;
 }

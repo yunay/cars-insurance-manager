@@ -122,7 +122,7 @@ import { withRouter } from 'react-router';
     }
 
     addCustomer() {
-        DbContext.addCustomer(this.model.carRegistrationNumbers, this.model.firstname, this.model.secondname, this.model.thirdname, this.model.phone, this.model.city).then((response) => {
+        DbContext.addCustomer(this.model).then((response) => {
 
             let notificationKey = `${+new Date()}_notificationKey`
             if (response.reponseType == DbResponseType.success)

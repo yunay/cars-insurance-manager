@@ -11,8 +11,15 @@ import { UpdateInsurer } from './pages/insurers/UpdateInsurer';
 import { Insurers } from './pages/insurers/Insurers';
 import { UpdateCustomer } from './pages/customers/UpdateCustomer';
 import { CustomerInfo } from './pages/customers/CustomerInfo';
+import * as moment from 'moment';
 
 export class App extends React.Component<any, any> {
+
+  constructor(props: any) {
+    super(props);
+
+    moment.locale('bg');
+  }
 
   render() {
     return (<Layout>

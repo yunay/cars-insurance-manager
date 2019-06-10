@@ -58,7 +58,7 @@ import { withRouter } from 'react-router';
     }
 
     addInsurer() {
-        DbContext.addInsurer(this.model.name).then((response) => {
+        DbContext.addInsurer(this.model).then((response) => {
 
             let notificationKey = `${+new Date()}_notificationKey`
             if (response.reponseType == DbResponseType.success)

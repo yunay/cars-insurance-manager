@@ -9,19 +9,22 @@ import { withRouter } from 'react-router';
 import { Customer } from '../../models/Customer';
 import { Insurer } from '../../models/Insurer';
 import { AutoComplete } from '../../common/ui/AutoComplete'
+import { BaseComponent } from '../../common/ui/BaseComponent';
 
-@observer class AddInsuranceImpl extends React.Component<any, any>{
+@observer class AddInsuranceImpl extends BaseComponent<any>{
 
     private model: Insurance;
     @observable currentInstallment: Installment;
     @observable notificationPanel: any;
     @observable customers: Customer[];
     @observable insurers: Insurer[];
+    @observable carRegNumbers:string[];
 
     constructor(props: any) {
         super(props);
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleCarNumberRegChange = this.handleCarNumberRegChange.bind(this);
         this.handleInstallmentChange = this.handleInstallmentChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
         this.addInsurance = this.addInsurance.bind(this);
@@ -86,7 +89,16 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
                         </div>
                         <div className="col-md-2">
                         <label>Рег. номер</label>
-                        <input type="text" className="form-control" disabled={this.model.customerId ? false : true}/>
+                        <select className="form-control" disabled={this.model.customerId ? false : true} onChange={this.handleCarNumberRegChange} value={this.model.carRegNumber}>
+                            <option>Избери</option>
+                            {
+                                this.carRegNumbers && this.carRegNumbers.length > 0
+                                ? this.carRegNumbers.map((regNumber)=>{
+                                    return <option value={regNumber} key={regNumber}>{regNumber}</option>
+                                })
+                                : null
+                            }
+                        </select>
                         </div>
                     </div>
                     <div className="form-row form-group">
@@ -100,8 +112,8 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
                             ? <div className="form-row form-group">
                                 <div className="col-md-12">
                                     {
-                                        this.model.installments.map(installment => {
-                                            return <div>{`Дата на вноска: ${installment.date.format("l")}, Сума на вноска: ${installment.value}`}</div>
+                                        this.model.installments.map((installment, index) => {
+                                            return <div key={index}>{`Дата на вноска: ${this.displayDateFor(installment.date)}, Сума на вноска: ${installment.value}`}</div>
                                         })
                                     }
                                 </div>
@@ -151,8 +163,13 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
         this.currentInstallment.date = date;
     }
 
+    handleCarNumberRegChange(e:any){
+        console.log(e.target.value)
+        this.model.carRegNumber = e.target.value;
+    }
+
     addInsurance() {
-        DbContext.addInsurance(this.model.customerId, this.model.insurerId, this.model.note, this.model.installments).then((response) => {
+        DbContext.addInsurance(this.model).then((response) => {
 
             let notificationKey = `${+new Date()}_notificationKey`
             if (response.reponseType == DbResponseType.success)
@@ -171,6 +188,7 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
 
     handleCustomerSelect(customer:Customer) {
         this.model.customerId = customer.id;
+        this.loadCustomerCarRegNumbers();
     }
 
     handleCustomerChange(value:any) {
@@ -253,6 +271,18 @@ import { AutoComplete } from '../../common/ui/AutoComplete'
                     for (let index = 0; index < dataArr.length; index++) {
                         this.insurers.push(doc[dataArr[index]]);
                     }
+                })
+            }
+        })
+    }
+
+    loadCustomerCarRegNumbers(){
+        DbContext.getCustomers({id:this.model.customerId}).exec((err, doc) => {
+            if (err) {
+
+            } else {
+                runInAction.bind(this)(() => {
+                    this.carRegNumbers = (doc[0] as Customer).carRegistrationNumbers
                 })
             }
         })
