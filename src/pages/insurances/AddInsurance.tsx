@@ -3,11 +3,11 @@ import { DbContext, DbResponseType } from '../../data/DataStore'
 import { observer } from 'mobx-react'
 import { observable, action, runInAction } from 'mobx';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
-import { Insurance, Installment } from '../../models/Insurance';
+import { Insurance, Installment } from '../../models/insurances/Insurance';
 import { DatePicker } from '../../common/ui/DatePicker';
 import { withRouter } from 'react-router';
-import { Customer } from '../../models/Customer';
-import { Insurer } from '../../models/Insurer';
+import { Customer } from '../../models/customers/Customer';
+import { Insurer } from '../../models/insurers/Insurer';
 import { AutoComplete } from '../../common/ui/AutoComplete'
 import { BaseComponent } from '../../common/ui/BaseComponent';
 

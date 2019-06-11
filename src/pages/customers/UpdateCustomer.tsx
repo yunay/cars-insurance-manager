@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DbContext, DbResponseType } from '../../data/DataStore'
-import { Customer } from '../../models/Customer';
+import { Customer } from '../../models/customers/Customer';
 import { observer } from 'mobx-react'
 import { observable, runInAction } from 'mobx';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';

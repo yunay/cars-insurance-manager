@@ -1,7 +1,7 @@
 import * as Datastore from 'nedb';
-import { Customer } from '../models/Customer'
-import { Insurance } from '../models/Insurance';
-import { Insurer } from '../models/Insurer';
+import { Customer } from '../models/customers/Customer'
+import { Insurance } from '../models/insurances/Insurance';
+import { Insurer } from '../models/insurers/Insurer';
 
 export enum DbResponseType {
     withError = 1,

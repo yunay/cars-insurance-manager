@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import { observable, runInAction } from 'mobx';
 import { DbContext } from '../../data/DataStore';
-import { Insurer } from '../../models/Insurer';
+import { Insurer } from '../../models/insurers/Insurer';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
 import { confirmAlert } from 'react-confirm-alert';
 

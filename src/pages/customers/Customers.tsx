@@ -2,7 +2,7 @@ import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import { observable, runInAction } from 'mobx';
-import { Customer } from '../../models/Customer';
+import { Customer } from '../../models/customers/Customer';
 import { DbContext } from '../../data/DataStore';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
 import { confirmAlert } from 'react-confirm-alert';

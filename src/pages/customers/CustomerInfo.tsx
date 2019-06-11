@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Customer } from '../../models/Customer';
+import { Customer } from '../../models/customers/Customer';
 import { observer } from 'mobx-react'
 import { observable, runInAction } from 'mobx';
 import { withRouter } from 'react-router';
 import { DbContext } from '../../data/DataStore';
-import { Insurance } from '../../models/Insurance';
+import { Insurance } from '../../models/insurances/Insurance';
 
 @observer class CustomerInfoImpl extends React.Component<any, any>{
     @observable private model: Customer;

@@ -3,7 +3,7 @@ import { DbContext, DbResponseType } from '../../data/DataStore'
 import { observer } from 'mobx-react'
 import { observable } from 'mobx';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
-import { Insurer } from '../../models/Insurer';
+import { Insurer } from '../../models/insurers/Insurer';
 import { withRouter } from 'react-router';
 
 @observer class AddInsurerImpl extends React.Component<any, any>{
