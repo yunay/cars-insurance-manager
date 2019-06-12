@@ -35,13 +35,23 @@ class HeaderImpl extends React.Component<any, any> {
           <i className="fas fa-fw fa-user-shield"></i><span>Застрахователи</span>
         </NavLink>
       </li>
-      <div className="text-center d-none d-md-inline">
-        <button className="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
+      <hr className="sidebar-divider" />
+      <li className={`collapsed ${this.getNavLinkClass("/settings")}`}>
+        <NavLink className="nav-link" to={"/settings"} exact>
+          <i className="fas fa-cogs"></i><span>Настройки</span>
+        </NavLink>
+        <div id="collapseTwo" className="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div className="bg-white py-2 collapse-inner rounded">
+            <NavLink className="collapse-item" to={"/statements"} exact>
+              Населени места
+            </NavLink>
+          </div>
+        </div>
+      </li>
     </ul>
   }
 
-  getNavLinkClass(path:string){
+  getNavLinkClass(path: string) {
     return this.props.location.pathname === path ? 'nav-item active' : 'nav-item';
   }
 }

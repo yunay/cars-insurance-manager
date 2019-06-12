@@ -12,13 +12,14 @@ import { Insurers } from './pages/insurers/Insurers';
 import { UpdateCustomer } from './pages/customers/UpdateCustomer';
 import { CustomerInfo } from './pages/customers/CustomerInfo';
 import * as moment from 'moment';
+import { Setttings } from './pages/settings/Settings';
 
 export class App extends React.Component<any, any> {
 
   constructor(props: any) {
     super(props);
 
-    moment.locale('bg');
+    this.initConfigs();
   }
 
   render() {
@@ -33,6 +34,11 @@ export class App extends React.Component<any, any> {
       <Route exact path='/update-insurer/:insurerId' component={UpdateInsurer} />
       <Route exact path='/update-customer/:customerId' component={UpdateCustomer} />
       <Route exact path='/customer-info/:customerId' component={CustomerInfo} />
+      <Route exact path='/settings' component={Setttings} />
     </Layout>);
+  }
+
+  initConfigs() {
+    moment.locale('bg');
   }
 }
