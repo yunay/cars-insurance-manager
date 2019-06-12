@@ -201,11 +201,11 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
     }
 
     getCustomerValue(customer:Customer){
-        return `${customer.firstname} ${customer.secondname} ${customer.thirdname} ${customer.city}`
+        return `${customer.firstname} ${customer.secondname} ${customer.thirdname} ${customer.statement}`
     }
 
     renderCustomer(customer:Customer){
-        return `${customer.firstname} ${customer.secondname} ${customer.thirdname} ${customer.city}`
+        return `${customer.firstname} ${customer.secondname} ${customer.thirdname} ${customer.statement}`
     }
 
     //#endregion

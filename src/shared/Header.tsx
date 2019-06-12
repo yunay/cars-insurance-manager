@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
+import * as $ from 'jquery';
 
 class HeaderImpl extends React.Component<any, any> {
 
@@ -36,12 +37,12 @@ class HeaderImpl extends React.Component<any, any> {
         </NavLink>
       </li>
       <hr className="sidebar-divider" />
-      <li className={`collapsed ${this.getNavLinkClass("/settings")}`}>
-        <NavLink className="nav-link" to={"/settings"} exact>
+      <li className={this.getNavLinkClass("/settings")}>
+        <a className="nav-link collapsed" href="javascript:;" data-toggle="collapse" onClick={this.toggleMenu}>
           <i className="fas fa-cogs"></i><span>Настройки</span>
-        </NavLink>
-        <div id="collapseTwo" className="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div className="bg-white py-2 collapse-inner rounded">
+        </a>
+        <div className="collapse">
+          <div className="bg-light py-2 collapse-inner rounded">
             <NavLink className="collapse-item" to={"/statements"} exact>
               Населени места
             </NavLink>
@@ -53,6 +54,12 @@ class HeaderImpl extends React.Component<any, any> {
 
   getNavLinkClass(path: string) {
     return this.props.location.pathname === path ? 'nav-item active' : 'nav-item';
+  }
+
+  toggleMenu(currentElement:any){
+    let currentMenuItem = $(currentElement.currentTarget);
+    currentMenuItem.toggleClass('collapsed');
+    currentMenuItem.next().slideToggle('show');
   }
 }
 

@@ -2,6 +2,7 @@ import * as Datastore from 'nedb';
 import { Customer } from '../models/customers/Customer'
 import { Insurance } from '../models/insurances/Insurance';
 import { Insurer } from '../models/insurers/Insurer';
+import { Statement, StatementType } from '../models/common/Statement';
 
 export enum DbResponseType {
     withError = 1,
@@ -22,16 +23,18 @@ export class DataResult {
 var db = {
     customers: new Datastore({ filename: './src/data/customers.db' }),
     insurances: new Datastore({ filename: './src/data/insurances.db' }),
-    insurers: new Datastore({ filename: './src/data/insurers.db' })
+    insurers: new Datastore({ filename: './src/data/insurers.db' }),
+    statements: new Datastore({ filename: './src/data/statements.db' })
 };
 
 db.customers.loadDatabase();
 db.insurances.loadDatabase();
 db.insurers.loadDatabase();
+db.statements.loadDatabase();
 
 export const DbContext = {
 
-    addCustomer: (customer:Customer): Promise<DataResult> => {
+    addCustomer: (customer: Customer): Promise<DataResult> => {
         customer.id = `${+new Date}_customer`
 
         return new Promise((resolve) => {
@@ -44,7 +47,7 @@ export const DbContext = {
         })
     },
 
-    getCustomers: (query?:any) => query ? db.customers.find(query) : db.customers.find({}),
+    getCustomers: (query?: any) => query ? db.customers.find(query) : db.customers.find({}),
 
     updateCustomer: (customerId: string, customer: Customer): Promise<DataResult> => {
 
@@ -62,7 +65,7 @@ export const DbContext = {
         db.customers.remove({ id: customerId })
     },
 
-    addInsurance: (insurance:Insurance): Promise<DataResult> => {
+    addInsurance: (insurance: Insurance): Promise<DataResult> => {
         insurance.id = `${+new Date}_insurance`
 
         return new Promise((resolve) => {
@@ -75,7 +78,7 @@ export const DbContext = {
         })
     },
 
-    getInsurances: (query?:any) => query ? db.insurances.find(query) : db.insurances.find({}),
+    getInsurances: (query?: any) => query ? db.insurances.find(query) : db.insurances.find({}),
 
     updateInsurance: () => {
         console.error("Not Implemented")
@@ -116,5 +119,25 @@ export const DbContext = {
 
     removeInsurerById: (insurerId: string) => {
         db.insurers.remove({ id: insurerId })
-    }
+    },
+
+    getStatements: (query?: any) => query ? db.statements.find(query) : db.statements.find({}),
+
+    addStatement: (statement: Statement): Promise<DataResult> => {
+        statement.id = `${+new Date}_statement`;
+        statement.statementWithType = `${statement.statementType == StatementType.city ? 'г.' : 'с.'} ${statement.name}`
+
+        return new Promise((resolve) => {
+            db.statements.insert(statement, (err, doc) => {
+                if (err)
+                    console.error(err);
+                else
+                    resolve(new DataResult(DbResponseType.success, doc));
+            });
+        })
+    },
+
+    removeStatementById: (statementId: string) => {
+        db.statements.remove({ id: statementId })
+    },
 }

@@ -36,7 +36,7 @@ import { Insurance } from '../../models/insurances/Insurance';
                                 <div className="col">
                                     <div className="form-row form-group">
                                         <div className="col-md-12">
-                                            {`${this.model.firstname} ${this.model.secondname} ${this.model.thirdname} от ${this.model.city}. Телефонен номер: ${this.model.phone}`}
+                                            {`${this.model.firstname} ${this.model.secondname} ${this.model.thirdname} от ${this.model.statement}. Телефонен номер: ${this.model.phone}`}
                                         </div>
                                     </div>
                                     {
@@ -59,8 +59,8 @@ import { Insurance } from '../../models/insurances/Insurance';
                                         <div className="col-md-12">
                                             Застраховки на клиента
                                             {
-                                                this.customerInsurances.map((insurance)=>{
-                                                    return <div key={insurance.insurerId}>{`${insurance.insurerId}`}</div>
+                                                this.customerInsurances.map((insurance, key)=>{
+                                                    return <div key={key}>{`${insurance.insurerId}`}</div>
                                                 })
                                             }
                                         </div>
@@ -81,7 +81,7 @@ import { Insurance } from '../../models/insurances/Insurance';
     }
 
     loadCustomer() {
-        DbContext.getCustomerById(this.props.match.params.customerId).exec((err, customer: Customer[]) => {
+        DbContext.getCustomers({id:this.props.match.params.customerId}).exec((err, customer: Customer[]) => {
             if (err) {
 
             } else {

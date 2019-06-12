@@ -1,14 +1,24 @@
+import { observable } from 'mobx';
 
-export enum StatementType{
+export enum StatementType {
     city = 1,
-    village = 2 
+    village = 2
 }
 
-export class Statement{
-    
-    public id:string;
+export class Statement {
 
-    public name:string;
+    constructor(id: string = "", name: string = "", statementWithType: string = "", statementType: StatementType = StatementType.city) {
+        this.id = id;
+        this.name = name;
+        this.statementWithType = statementWithType;
+        this.statementType = statementType;
+    }
 
-    public statementType:StatementType
+    @observable public id: string;
+
+    @observable public name: string;
+
+    @observable public statementWithType: string;
+
+    @observable public statementType: StatementType
 }

@@ -41,7 +41,7 @@
     cursor: pointer;
 }
 
-.car-reg-number{
+.removable-item{
     padding: 3px 10px;
     border: 1px solid black;
     color: black;
@@ -52,7 +52,7 @@
     margin: 2px 2px 0 0;
 }
 
-.remove-reg-number{
+.removable-item-x{
     display: inline-block;
     position: absolute;
     color: red;

@@ -2,15 +2,18 @@ import * as React from 'react';
 import { DbContext, DbResponseType } from '../../data/DataStore'
 import { Customer } from '../../models/customers/Customer';
 import { observer } from 'mobx-react'
-import { observable } from 'mobx';
+import { observable, runInAction } from 'mobx';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
 import { withRouter } from 'react-router';
+import { AutoComplete } from '../../common/ui/AutoComplete';
+import { Statement } from '../../models/common/Statement';
 
 @observer class AddCustomerImpl extends React.Component<any, any>{
     private model: Customer;
 
     @observable notificationPanel: any;
     @observable currentCarRegNumber: string;
+    @observable statements: Statement[];
 
     constructor(props: any) {
         super(props);
@@ -21,8 +24,16 @@ import { withRouter } from 'react-router';
         this.addCarRegNumber = this.addCarRegNumber.bind(this);
         this.handleCarRegNumberChange = this.handleCarRegNumberChange.bind(this);
 
+        this.handleStatementChange = this.handleStatementChange.bind(this);
+        this.handleStatementSelect = this.handleStatementSelect.bind(this);
+        this.shouldStatementRender = this.shouldStatementRender.bind(this);
+        this.getStatementValue = this.getStatementValue.bind(this);
+        this.renderStatement = this.renderStatement.bind(this);
+
         this.model = new Customer();
         this.currentCarRegNumber = "";
+
+        this.initStatementsData();
     }
 
     render() {
@@ -55,7 +66,14 @@ import { withRouter } from 'react-router';
                                 </div>
                                 <div className="col-md-3">
                                     <label>Град / село</label>
-                                    <input type="text" className="form-control" name="city" value={this.model.city} onChange={this.handleChange} />
+                                    <AutoComplete
+                                        items={this.statements && this.statements.length > 0 ? this.statements : null}
+                                        getItemValue={this.getStatementValue}
+                                        onChange={this.handleStatementChange}
+                                        onSelect={this.handleStatementSelect}
+                                        shouldItemRender={this.shouldStatementRender}
+                                        renderItem={this.renderStatement}
+                                    />
                                 </div>
                                 <div className="col-md-3">
                                     <label>Телефонен номер</label>
@@ -70,8 +88,8 @@ import { withRouter } from 'react-router';
                                             {
                                                 this.model.carRegistrationNumbers.map((carRegNumber, index) => {
                                                     return <div key={index}>
-                                                        <div className="car-reg-number">{carRegNumber}</div>
-                                                        <button type="button" className="close remove-reg-number" onClick={this.removeCarRegNumber.bind(this,index)}>
+                                                        <div className="removable-item">{carRegNumber}</div>
+                                                        <button type="button" className="close removable-item-x" onClick={this.removeCarRegNumber.bind(this, index)}>
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
@@ -113,8 +131,8 @@ import { withRouter } from 'react-router';
         this.model.carRegistrationNumbers.push(this.currentCarRegNumber);
     }
 
-    removeCarRegNumber(index:number){
-        this.model.carRegistrationNumbers.splice(index,1)
+    removeCarRegNumber(index: number) {
+        this.model.carRegistrationNumbers.splice(index, 1)
     }
 
     handleCarRegNumberChange(e: any) {
@@ -131,6 +149,49 @@ import { withRouter } from 'react-router';
                 this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка при добавяне на нов клиент.'} />
         })
     }
+
+    //#region Statements AutoComplete
+
+    handleStatementSelect(statement: Statement) {
+        this.model.statement = statement.statementWithType;
+    }
+
+    handleStatementChange(value: any) {
+        if(this.model.statement != "")
+            this.model.statement = "";
+    }
+
+    shouldStatementRender(statement: Statement, value: any) {
+        return statement.name.toLowerCase().indexOf(value.toLowerCase()) > -1
+    }
+
+    getStatementValue(statement: Statement) {
+        return `${statement.name}`
+    }
+
+    renderStatement(statement: Statement) {
+        return `${statement.name}`
+    }
+
+    
+    initStatementsData(){
+        DbContext.getStatements().exec((err, doc) => {
+            if (err) {
+
+            } else {
+                var dataArr = Object.keys(doc);
+
+                runInAction.bind(this)(() => {
+                    this.statements = []
+                    for (let index = 0; index < dataArr.length; index++) {
+                        this.statements.push(doc[dataArr[index]]);
+                    }
+                })
+            }
+        })
+    }
+
+    //#endregion
 }
 
 export const AddCustomer = withRouter(AddCustomerImpl);

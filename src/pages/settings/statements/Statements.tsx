@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { DbContext, DbResponseType } from '../../data/DataStore'
+import { DbContext, DbResponseType } from '../../../data/DataStore'
 import { observer } from 'mobx-react'
-import { observable } from 'mobx';
-import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
-import { Insurer } from '../../models/insurers/Insurer';
-import { Statement, StatementType } from '../../models/common/Statement';
-import { BaseComponent } from '../../common/ui/BaseComponent';
+import { observable, runInAction } from 'mobx';
+import { NotificationPanel, NotificationType } from '../../../common/ui/NotificationPanel';
+import { Statement, StatementType } from '../../../models/common/Statement';
+import { BaseComponent } from '../../../common/ui/BaseComponent';
+import { StatementsResults } from './StatementsResults';
 
 @observer export class Statements extends BaseComponent<any>{
     private model: Statement;
+
+    @observable statements: Statement[];
     @observable notificationPanel: any;
 
     constructor(props: any) {
@@ -16,8 +18,13 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
 
         this.handleChange = this.handleChange.bind(this);
         this.addStatement = this.addStatement.bind(this);
+        this.removeStatement = this.removeStatement.bind(this);
 
         this.model = new Statement();
+    }
+
+    componentDidMount() {
+        this.loadStatements();
     }
 
     render() {
@@ -50,6 +57,8 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                     </div>
                 </div>
             </div>
+
+            <StatementsResults statements={this.statements} onRemoveStatement={this.removeStatement}/>
         </>
     }
 
@@ -58,13 +67,37 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
     }
 
     addStatement() {
-        DbContext.addInsurer(this.model).then((response) => {
+        DbContext.addStatement(this.model).then((response) => {
 
             let notificationKey = `${+new Date()}_notificationKey`
             if (response.reponseType == DbResponseType.success)
                 this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно добавено населено място.'} />
             else
                 this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка при добавяне на населено място.'} />
+
+            this.loadStatements()
+        })
+    }
+
+    removeStatement(statementId:string){
+        DbContext.removeStatementById(statementId);
+        this.loadStatements();
+    }
+
+    loadStatements() {
+        DbContext.getStatements().exec((err, doc) => {
+            if (err) {
+
+            } else {
+                var dataArr = Object.keys(doc);
+                this.statements = [];
+
+                runInAction.bind(this)(() => {
+                    for (let index = 0; index < dataArr.length; index++) {
+                        this.statements.push(doc[dataArr[index]]);
+                    }
+                })
+            }
         })
     }
 }

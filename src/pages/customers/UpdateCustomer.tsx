@@ -57,7 +57,7 @@ import { withRouter } from 'react-router';
                                         </div>
                                         <div className="col-md-3">
                                             <label>Град / село</label>
-                                            <input type="text" className="form-control" name="city" value={this.model.city} onChange={this.handleChange} />
+                                            <input type="text" className="form-control" name="city" value={this.model.statement} onChange={this.handleChange} />
                                         </div>
                                         <div className="col-md-3">
                                             <label>Телефонен номер</label>
@@ -137,7 +137,7 @@ import { withRouter } from 'react-router';
     }
 
     loadCustomer() {
-        DbContext.getCustomerById(this.props.match.params.customerId).exec((err, customer: Customer[]) => {
+        DbContext.getCustomers({id:this.props.match.params.customerId}).exec((err, customer: Customer[]) => {
             if (err) {
 
             } else {
