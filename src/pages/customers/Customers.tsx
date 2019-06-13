@@ -12,11 +12,6 @@ import { confirmAlert } from 'react-confirm-alert';
     @observable alreadySearched: boolean = false;
     @observable customers: Customer[];
 
-    constructor(props: any) {
-        super(props);
-
-    }
-
     componentDidMount() {
         this.loadCustomers();
     }
@@ -62,7 +57,7 @@ import { confirmAlert } from 'react-confirm-alert';
                                                             <td>{customer.firstname}</td>
                                                             <td>{customer.secondname}</td>
                                                             <td>{customer.thirdname}</td>
-                                                            <td>{customer.city}</td>
+                                                            <td>{customer.statement}</td>
                                                             <td>{customer.phone}</td>
                                                             <td>
                                                                 <div className="d-flex justify-content-around">
