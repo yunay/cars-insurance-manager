@@ -2,7 +2,7 @@ import { BaseComponent } from "./BaseComponent";
 import React = require('react');
 
 export enum CountInfoCardType{
-    customer, insurance, insurer
+    customer, insurance, insurer, vehicle
 }
 
 interface CountInfoCardProps{
@@ -17,11 +17,11 @@ export class CountInfoCard extends BaseComponent<CountInfoCardProps> {
             <div className="card-body">
                 <div className="row no-gutters align-items-center">
                     <div className="col mr-2">
-                        <div className={`text-xs font-weight-bold text-${this.getTheme()} text-uppercase mb-1`}>{this.props.text}</div>
+                        <div className={`text-md font-weight-bold text-${this.getTheme()} text-uppercase mb-1`}>{this.props.text}</div>
                         <div className="h5 mb-0 font-weight-bold text-gray-800">{this.props.count}</div>
                     </div>
                     <div className="col-auto">
-                        <i className={`${this.getIcon()} fa-2x text-gray-300`}></i>
+                        <i className={`${this.getIcon()} fa-3x text-${this.getTheme()}`}></i>
                     </div>
                 </div>
             </div>
@@ -33,6 +33,7 @@ export class CountInfoCard extends BaseComponent<CountInfoCardProps> {
             case CountInfoCardType.customer: return "primary";
             case CountInfoCardType.insurance: return "success";
             case CountInfoCardType.insurer: return "danger";
+            case CountInfoCardType.vehicle: return "info";
         }
     }
 
@@ -41,6 +42,7 @@ export class CountInfoCard extends BaseComponent<CountInfoCardProps> {
             case CountInfoCardType.customer: return "fas fa-users";
             case CountInfoCardType.insurance: return "fas fa-shield-alt";
             case CountInfoCardType.insurer: return "fas fa-user-shield";
+            case CountInfoCardType.vehicle: return "fas fa-car";
         }
     }
 }
