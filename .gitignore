@@ -3,3 +3,4 @@ package-lock.json
 customers.db
 insurances.db
 insurers.db
+statements.db
