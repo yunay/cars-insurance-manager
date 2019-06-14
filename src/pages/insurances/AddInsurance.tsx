@@ -164,7 +164,6 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
     }
 
     handleCarNumberRegChange(e:any){
-        console.log(e.target.value)
         this.model.carRegNumber = e.target.value;
     }
 

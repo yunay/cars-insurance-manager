@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { observable, runInAction, action } from 'mobx';
 import { Customer } from '../../models/customers/Customer';
 import { Insurer } from '../../models/insurers/Insurer';
-import { Insurance } from '../../models/insurances/insurancesSearchCriteria';
+import { Insurance } from '../../models/insurances/Insurance';
 import { DbContext } from '../../data/DataStore';
 import { ArrayHelper } from '../../common/helpers/ArrayHelper';
 import { Graph, GraphType } from '../../common/ui/Graph';
@@ -31,13 +31,13 @@ import { Graph, GraphType } from '../../common/ui/Graph';
       <div className="card-body">
         <div className="row">
           <div className="col-xl-3 col-md-6 mb-3">
-            <CountInfoCard text={"БРОЙ ЗАСТРАХОВАТЕЛИ"} type={CountInfoCardType.insurer} count={this.insurances && this.insurances.length > 0 ? this.insurances.length : 0} />
+            <CountInfoCard text={"БРОЙ ЗАСТРАХОВАТЕЛИ"} type={CountInfoCardType.insurer} count={this.insurers && this.insurers.length > 0 ? this.insurers.length : 0} />
           </div>
           <div className="col-xl-3 col-md-6 mb-3">
             <CountInfoCard text={"Брой клиенти"} type={CountInfoCardType.customer} count={this.customers && this.customers.length > 0 ? this.customers.length : 0} />
           </div>
           <div className="col-xl-3 col-md-6 mb-3">
-            <CountInfoCard text={"БРОЙ ЗАСТРАХОВКИ"} type={CountInfoCardType.insurance} count={this.insurers && this.insurers.length > 0 ? this.insurers.length : 0} />
+            <CountInfoCard text={"БРОЙ ЗАСТРАХОВКИ"} type={CountInfoCardType.insurance} count={this.insurances && this.insurances.length > 0 ? this.insurances.length : 0} />
           </div>
           <div className="col-xl-3 col-md-6 mb-3">
             <CountInfoCard text={"БРОЙ ПРЕВОЗНИ СРЕДСТВА"} type={CountInfoCardType.vehicle} count={this.vehicleCount ? this.vehicleCount : 0} />
@@ -47,7 +47,7 @@ import { Graph, GraphType } from '../../common/ui/Graph';
           {
             this.insurancesDates && this.insurancesDates.length > 0 && this.insurancesCountPerDate && this.insurancesCountPerDate.length > 0
               ? <div className="col-6">
-                <Graph graphType={GraphType.Line} label={'Застраховки'} data={[1, 23, 4, 54, 1, 34, 33, 12, 1, 32, 1, 3, 123]} datasetColor={"red"} labels={["1"]} />
+                <Graph graphType={GraphType.Line} label={'Застраховки'} data={[1]} datasetColor={"red"} labels={[""]} />
               </div>
               : null
           }
@@ -137,8 +137,8 @@ import { Graph, GraphType } from '../../common/ui/Graph';
       for (let i = 0; i < this.insurances.length; i++) {
         const element = this.insurances[i];
 
-        this.insurancesDates.push(this.displayDateFor(element.dateFrom))
-        this.insurancesCountPerDate.push(this.insurances.filter(x => x.dateFrom.getDay == element.dateFrom.getDay).length)
+        this.insurancesDates.push(this.displayDateFor(element.createdOn))
+        this.insurancesCountPerDate.push(this.insurances.filter(x => x.createdOn.getDay == element.createdOn.getDay).length)
       }
     }
   }
