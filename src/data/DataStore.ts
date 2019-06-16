@@ -49,6 +49,8 @@ export const DbContext = {
 
     getCustomers: (query?: any) => query ? db.customers.find(query) : db.customers.find({}),
 
+    getCustomersPagesCount:(query?: any) => query ? db.customers.count(query) : db.customers.count({}),
+
     updateCustomer: (customerId: string, customer: Customer): Promise<DataResult> => {
 
         return new Promise((resolve) => {
@@ -101,7 +103,9 @@ export const DbContext = {
         })
     },
 
-    getInsurers: () => db.insurers.find({}),
+    getInsurers: (query?: any) => query ? db.insurers.find(query) : db.insurers.find({}),
+
+    getInsurersPagesCount:(query?: any) => query ? db.insurers.count(query) : db.insurers.count({}),
 
     getInsurerById: (insurerId: string) => db.insurers.find({ id: insurerId }),
 

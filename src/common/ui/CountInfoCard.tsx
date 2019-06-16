@@ -17,11 +17,11 @@ export class CountInfoCard extends BaseComponent<CountInfoCardProps> {
             <div className="card-body">
                 <div className="row no-gutters align-items-center">
                     <div className="col mr-2">
-                        <div className={`text-md font-weight-bold text-${this.getTheme()} text-uppercase mb-1`}>{this.props.text}</div>
+                        <div className={`text-xs font-weight-bold text-${this.getTheme()} text-uppercase mb-1`}>{this.props.text}</div>
                         <div className="h5 mb-0 font-weight-bold text-gray-800">{this.props.count}</div>
                     </div>
                     <div className="col-auto">
-                        <i className={`${this.getIcon()} fa-3x text-${this.getTheme()}`}></i>
+                        <i className={`${this.getIcon()} fa-2x text-${this.getTheme()}`}></i>
                     </div>
                 </div>
             </div>

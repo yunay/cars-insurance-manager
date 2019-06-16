@@ -30,16 +30,16 @@ import { Graph, GraphType } from '../../common/ui/Graph';
       </div>
       <div className="card-body">
         <div className="row">
-          <div className="col-xl-3 col-md-6 mb-3">
+          <div className="col-xl-3 col-md-6 col-sm-6 mb-3">
             <CountInfoCard text={"БРОЙ ЗАСТРАХОВАТЕЛИ"} type={CountInfoCardType.insurer} count={this.insurers && this.insurers.length > 0 ? this.insurers.length : 0} />
           </div>
-          <div className="col-xl-3 col-md-6 mb-3">
+          <div className="col-xl-3 col-md-6 col-sm-6 mb-3">
             <CountInfoCard text={"Брой клиенти"} type={CountInfoCardType.customer} count={this.customers && this.customers.length > 0 ? this.customers.length : 0} />
           </div>
-          <div className="col-xl-3 col-md-6 mb-3">
+          <div className="col-xl-3 col-md-6 col-sm-6 mb-3">
             <CountInfoCard text={"БРОЙ ЗАСТРАХОВКИ"} type={CountInfoCardType.insurance} count={this.insurances && this.insurances.length > 0 ? this.insurances.length : 0} />
           </div>
-          <div className="col-xl-3 col-md-6 mb-3">
+          <div className="col-xl-3 col-md-6 col-sm-6 mb-3">
             <CountInfoCard text={"БРОЙ ПРЕВОЗНИ СРЕДСТВА"} type={CountInfoCardType.vehicle} count={this.vehicleCount ? this.vehicleCount : 0} />
           </div>
         </div>
