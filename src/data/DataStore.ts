@@ -82,6 +82,8 @@ export const DbContext = {
 
     getInsurances: (query?: any) => query ? db.insurances.find(query) : db.insurances.find({}),
 
+    getInsurancesPagesCount:(query?: any) => query ? db.insurances.count(query) : db.insurances.count({}),
+
     updateInsurance: () => {
         console.error("Not Implemented")
     },
