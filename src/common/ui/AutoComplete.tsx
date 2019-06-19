@@ -45,7 +45,7 @@ interface AutoCompleteProps {
     render() {
         return <AutoCompleteCmp
             wrapperProps={{ className: 'd-block' }}
-            inputProps={{ className: 'form-control' }}
+            inputProps={{ className: 'form-control', type:"search" }}
             menuStyle={menuStyle}
             items={this.props.items ? this.props.items : []}
             shouldItemRender={this.shouldItemRender}
