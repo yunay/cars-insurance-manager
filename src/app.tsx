@@ -13,6 +13,7 @@ import { UpdateCustomer } from './pages/customers/UpdateCustomer';
 import { CustomerInfo } from './pages/customers/CustomerInfo';
 import * as moment from 'moment';
 import { Statements } from './pages/settings/statements/Statements';
+import { InsuranceInfo } from './pages/insurances/InsuranceInfo';
 
 export class App extends React.Component<any, any> {
 
@@ -29,6 +30,7 @@ export class App extends React.Component<any, any> {
       <Route path='/add-customer' component={AddCustomer} />
       <Route exact path='/insurances' component={Insurances} />
       <Route exact path='/add-insurance' component={AddInsurance} />
+      <Route exact path='/insurance-info/:insuranceId' component={InsuranceInfo} />
       <Route exact path='/insurers' component={Insurers} />
       <Route exact path='/add-insurer' component={AddInsurer} />
       <Route exact path='/update-insurer/:insurerId' component={UpdateInsurer} />

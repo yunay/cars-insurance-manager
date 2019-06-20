@@ -5,6 +5,7 @@ import { observable, runInAction } from 'mobx';
 import { withRouter } from 'react-router';
 import { DbContext } from '../../data/DataStore';
 import { Insurance } from '../../models/insurances/Insurance';
+import { SingleItemInfoPanel, MultipleItemInfoPanel } from '../../common/ui/InfoPanel';
 
 @observer class CustomerInfoImpl extends React.Component<any, any>{
     @observable private model: Customer;
@@ -32,42 +33,33 @@ import { Insurance } from '../../models/insurances/Insurance';
                 {
                     this.model
                         ? <div className="card-body">
-                            <div className="row">
-                                <div className="col">
-                                    <div className="form-row form-group">
-                                        <div className="col-md-12">
-                                            {`${this.model.firstname} ${this.model.secondname} ${this.model.thirdname} от ${this.model.statement}. Телефонен номер: ${this.model.phone}`}
-                                        </div>
-                                    </div>
+                            <div className="form-row form-group">
+                                <div className="col-md-4">
+                                    <SingleItemInfoPanel text={`${this.model.firstname} ${this.model.secondname} ${this.model.thirdname}`} title={'Имена на клиента'} icon={"fas fa-user-tie"} />
+                                </div>
+                                <div className="col-md-4">
+                                    <SingleItemInfoPanel text={`${this.model.phone}`} title={'Телефонен номер'} icon={"fas fa-mobile-alt"} />
+                                </div>
+                                <div className="col-md-4">
+                                    <SingleItemInfoPanel text={this.model.statement} title={'Населено място'} icon={"fas fa-city"} />
+                                </div>
+                            </div>
+                            <div className="form-row form-group">
+                                <div className="col-4">
                                     {
                                         this.model.carRegistrationNumbers && this.model.carRegistrationNumbers.length > 0
-                                            ? <div className="form-row form-group">
-                                                <div className="col-md-12">
-                                                    Записани регистрационни номера на клиента:
-                                                    {
-                                                        this.model.carRegistrationNumbers.map((carRegNumber, index) => {
-                                                            return <div key={index} className="car-reg-number">{carRegNumber}</div>
-                                                        })
-                                                    }
-                                                </div>
-                                            </div>
-                                            : null
-                                    }
-                                    {
-                                        this.customerInsurances && this.customerInsurances.length > 0
-                                        ? <div className="form-row form-group">
-                                        <div className="col-md-12">
-                                            Застраховки на клиента
-                                            {
-                                                this.customerInsurances.map((insurance, key)=>{
-                                                    return <div key={key}>{`${insurance.insurerId}`}</div>
-                                                })
-                                            }
-                                        </div>
-                                    </div>
-                                    :null
+                                        ? <MultipleItemInfoPanel texts={[...this.model.carRegistrationNumbers]} title={'Регистрационнни номера'} icon={"fas fa-car"} />
+                                        : null
                                     }
                                 </div>
+                                <div className="col-4">
+                                    {
+                                        this.model.carRegistrationNumbers && this.model.carRegistrationNumbers.length > 0
+                                        ? <MultipleItemInfoPanel texts={[...this.model.carRegistrationNumbers]} title={'Застраховки ТОДО'} icon={"fas fa-car"} />
+                                        : null
+                                    }
+                                </div>
+                                <div className="col-4"></div>
                             </div>
                         </div>
                         : null
@@ -81,7 +73,7 @@ import { Insurance } from '../../models/insurances/Insurance';
     }
 
     loadCustomer() {
-        DbContext.getCustomers({id:this.props.match.params.customerId}).exec((err, customer: Customer[]) => {
+        DbContext.getCustomers({ id: this.props.match.params.customerId }).exec((err, customer: Customer[]) => {
             if (err) {
 
             } else {
@@ -92,8 +84,8 @@ import { Insurance } from '../../models/insurances/Insurance';
         })
     }
 
-    loadCustomerInsurances(){
-        DbContext.getInsurances({customerId:this.props.match.params.customerId}).exec((err, doc) => {
+    loadCustomerInsurances() {
+        DbContext.getInsurances({ customerId: this.props.match.params.customerId }).exec((err, doc) => {
             if (err) {
 
             } else {

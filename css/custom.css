@@ -62,3 +62,8 @@
     color: red;
     margin: 4px 8px;
 }
+
+.single-info-body{
+    font-size: 17px;
+    font-weight: bold;
+}
