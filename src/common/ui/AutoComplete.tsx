@@ -25,10 +25,11 @@ interface AutoCompleteProps {
     shouldItemRender: (item: any, value: any) => boolean;
     getItemValue: (e: any) => string;
     renderItem: (item: any) => string;
+    initialValue?: string;
 }
 
 @observer export class AutoComplete extends React.Component<AutoCompleteProps, any> {
-    @observable inputValue: string = '';
+    @observable inputValue: string;
     private isSelected:boolean;
 
     constructor(props: AutoCompleteProps) {
@@ -40,6 +41,8 @@ interface AutoCompleteProps {
         this.getItemValue = this.getItemValue.bind(this);
         this.renderItem = this.renderItem.bind(this);
         this.onMenuVisibilityChange = this.onMenuVisibilityChange.bind(this);
+
+        this.inputValue = this.props.initialValue ? this.props.initialValue : "";
     }
 
     render() {

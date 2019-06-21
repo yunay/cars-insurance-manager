@@ -18,7 +18,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
     @observable notificationPanel: any;
     @observable customers: Customer[];
     @observable insurers: Insurer[];
-    @observable carRegNumbers:string[];
+    @observable carRegNumbers: string[];
 
     constructor(props: any) {
         super(props);
@@ -66,39 +66,39 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                         <div className="col-md-5">
                             <label>Клиент</label>
                             <div>
-                            <AutoComplete 
-                            items={this.customers && this.customers.length > 0 ? this.customers : null}
-                            getItemValue={this.getCustomerValue}
-                            onChange={this.handleCustomerChange}
-                            onSelect={this.handleCustomerSelect}
-                            shouldItemRender={this.shouldCustomerRender}
-                            renderItem={this.renderCustomer}
-                            />
+                                <AutoComplete
+                                    items={this.customers && this.customers.length > 0 ? this.customers : null}
+                                    getItemValue={this.getCustomerValue}
+                                    onChange={this.handleCustomerChange}
+                                    onSelect={this.handleCustomerSelect}
+                                    shouldItemRender={this.shouldCustomerRender}
+                                    renderItem={this.renderCustomer}
+                                />
                             </div>
                         </div>
                         <div className="col-md-5">
                             <label>Застраховател</label>
-                            <AutoComplete 
-                            items={this.insurers && this.insurers.length > 0 ? this.insurers : null}
-                            getItemValue={this.getInsurerValue}
-                            onChange={this.handleInsurerChange}
-                            onSelect={this.handleInsurerSelect}
-                            shouldItemRender={this.shouldInsurerRender}
-                            renderItem={this.renderInsurer}
+                            <AutoComplete
+                                items={this.insurers && this.insurers.length > 0 ? this.insurers : null}
+                                getItemValue={this.getInsurerValue}
+                                onChange={this.handleInsurerChange}
+                                onSelect={this.handleInsurerSelect}
+                                shouldItemRender={this.shouldInsurerRender}
+                                renderItem={this.renderInsurer}
                             />
                         </div>
                         <div className="col-md-2">
-                        <label>Рег. номер</label>
-                        <select className="form-control" disabled={this.model.customerId ? false : true} onChange={this.handleCarNumberRegChange} value={this.model.carRegNumber}>
-                            <option>Избери</option>
-                            {
-                                this.carRegNumbers && this.carRegNumbers.length > 0
-                                ? this.carRegNumbers.map((regNumber)=>{
-                                    return <option value={regNumber} key={regNumber}>{regNumber}</option>
-                                })
-                                : null
-                            }
-                        </select>
+                            <label>Рег. номер</label>
+                            <select className="form-control" disabled={this.model.customerId ? false : true} onChange={this.handleCarNumberRegChange} value={this.model.carRegNumber}>
+                                <option>Избери</option>
+                                {
+                                    this.carRegNumbers && this.carRegNumbers.length > 0
+                                        ? this.carRegNumbers.map((regNumber) => {
+                                            return <option value={regNumber} key={regNumber}>{regNumber}</option>
+                                        })
+                                        : null
+                                }
+                            </select>
                         </div>
                     </div>
                     <div className="form-row form-group">
@@ -113,7 +113,12 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                                 <div className="col-md-12">
                                     {
                                         this.model.installments.map((installment, index) => {
-                                            return <div key={index}>{`Дата на вноска: ${this.displayDateFor(installment.date)}, Сума на вноска: ${installment.value}`}</div>
+                                            return <div key={index}>
+                                                <div className="removable-item">{`Дата на вноска: ${this.displayDateFor(installment.date)}, Сума на вноска: ${installment.value}`}</div>
+                                                <button type="button" className="close removable-item-x" onClick={this.removeInstallment.bind(this, index)}>
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
                                         })
                                     }
                                 </div>
@@ -163,7 +168,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         this.currentInstallment.date = date;
     }
 
-    handleCarNumberRegChange(e:any){
+    handleCarNumberRegChange(e: any) {
         this.model.carRegNumber = e.target.value;
     }
 
@@ -183,27 +188,31 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         this.currentInstallment = new Installment();
     }
 
+    removeInstallment(index: number) {
+        this.model.installments.splice(index, 1)
+    }
+
     //#region Customers AutoComplete
 
-    handleCustomerSelect(customer:Customer) {
+    handleCustomerSelect(customer: Customer) {
         this.model.customerId = customer.id;
         this.loadCustomerCarRegNumbers();
     }
 
-    handleCustomerChange(value:any) {
-        if(this.model.customerId != "")
+    handleCustomerChange(value: any) {
+        if (this.model.customerId != "")
             this.model.customerId = "";
     }
 
-    shouldCustomerRender(customer:Customer,value:any){
+    shouldCustomerRender(customer: Customer, value: any) {
         return customer.firstname.toLowerCase().indexOf(value.toLowerCase()) > -1
     }
 
-    getCustomerValue(customer:Customer){
+    getCustomerValue(customer: Customer) {
         return `${customer.firstname} ${customer.secondname} ${customer.thirdname} ${customer.statement}`
     }
 
-    renderCustomer(customer:Customer){
+    renderCustomer(customer: Customer) {
         return `${customer.firstname} ${customer.secondname} ${customer.thirdname} ${customer.statement}`
     }
 
@@ -211,24 +220,24 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
 
     //#region Insurers AutoComplete
 
-    handleInsurerSelect(insurer:Insurance) {
+    handleInsurerSelect(insurer: Insurance) {
         this.model.insurerId = insurer.id;
     }
 
-    handleInsurerChange(value:any) {
-        if(this.model.insurerId != "")
+    handleInsurerChange(value: any) {
+        if (this.model.insurerId != "")
             this.model.insurerId = "";
     }
 
-    shouldInsurerRender(insurer:Insurer,value:any){
+    shouldInsurerRender(insurer: Insurer, value: any) {
         return insurer.name.toLowerCase().indexOf(value.toLowerCase()) > -1
     }
 
-    getInsurerValue(insurer:Insurer){
+    getInsurerValue(insurer: Insurer) {
         return `${insurer.name}`
     }
 
-    renderInsurer(insurer:Insurer){
+    renderInsurer(insurer: Insurer) {
         return `${insurer.name}`
     }
 
@@ -236,12 +245,12 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
 
     //#region Init
 
-    initData(){
+    initData() {
         this.initCustomersData();
         this.initInsurersData();
     }
 
-    initCustomersData(){
+    initCustomersData() {
         DbContext.getCustomers().exec((err, doc) => {
             if (err) {
 
@@ -258,7 +267,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         })
     }
 
-    initInsurersData(){
+    initInsurersData() {
         DbContext.getInsurers().exec((err, doc) => {
             if (err) {
 
@@ -275,8 +284,8 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         })
     }
 
-    loadCustomerCarRegNumbers(){
-        DbContext.getCustomers({id:this.model.customerId}).exec((err, doc) => {
+    loadCustomerCarRegNumbers() {
+        DbContext.getCustomers({ id: this.model.customerId }).exec((err, doc) => {
             if (err) {
 
             } else {

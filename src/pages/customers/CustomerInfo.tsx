@@ -6,8 +6,10 @@ import { withRouter } from 'react-router';
 import { DbContext } from '../../data/DataStore';
 import { Insurance } from '../../models/insurances/Insurance';
 import { SingleItemInfoPanel, MultipleItemInfoPanel } from '../../common/ui/InfoPanel';
+import { BaseComponent } from '../../common/ui/BaseComponent';
+import { NavLink } from 'react-router-dom';
 
-@observer class CustomerInfoImpl extends React.Component<any, any>{
+@observer class CustomerInfoImpl extends BaseComponent<any>{
     @observable private model: Customer;
     @observable private customerInsurances: Insurance[];
 
@@ -16,7 +18,6 @@ import { SingleItemInfoPanel, MultipleItemInfoPanel } from '../../common/ui/Info
 
         this.onBackBtnClick = this.onBackBtnClick.bind(this);
         this.loadCustomer();
-        this.loadCustomerInsurances();
     }
 
     render() {
@@ -35,27 +36,27 @@ import { SingleItemInfoPanel, MultipleItemInfoPanel } from '../../common/ui/Info
                         ? <div className="card-body">
                             <div className="form-row form-group">
                                 <div className="col-md-4">
-                                    <SingleItemInfoPanel text={`${this.model.firstname} ${this.model.secondname} ${this.model.thirdname}`} title={'Имена на клиента'} icon={"fas fa-user-tie"} />
+                                    <SingleItemInfoPanel item={`${this.model.firstname} ${this.model.secondname} ${this.model.thirdname}`} title={'Имена на клиента'} icon={"fas fa-user-tie"} />
                                 </div>
                                 <div className="col-md-4">
-                                    <SingleItemInfoPanel text={`${this.model.phone}`} title={'Телефонен номер'} icon={"fas fa-mobile-alt"} />
+                                    <SingleItemInfoPanel item={`${this.model.phone}`} title={'Телефонен номер'} icon={"fas fa-mobile-alt"} />
                                 </div>
                                 <div className="col-md-4">
-                                    <SingleItemInfoPanel text={this.model.statement} title={'Населено място'} icon={"fas fa-city"} />
+                                    <SingleItemInfoPanel item={this.model.statement} title={'Населено място'} icon={"fas fa-city"} />
                                 </div>
                             </div>
                             <div className="form-row form-group">
                                 <div className="col-4">
                                     {
                                         this.model.carRegistrationNumbers && this.model.carRegistrationNumbers.length > 0
-                                        ? <MultipleItemInfoPanel texts={[...this.model.carRegistrationNumbers]} title={'Регистрационнни номера'} icon={"fas fa-car"} />
+                                        ? <MultipleItemInfoPanel items={[...this.model.carRegistrationNumbers]} title={'Регистрационнни номера'} icon={"fas fa-car"} />
                                         : null
                                     }
                                 </div>
                                 <div className="col-4">
                                     {
-                                        this.model.carRegistrationNumbers && this.model.carRegistrationNumbers.length > 0
-                                        ? <MultipleItemInfoPanel texts={[...this.model.carRegistrationNumbers]} title={'Застраховки ТОДО'} icon={"fas fa-car"} />
+                                        this.customerInsurances && this.customerInsurances.length > 0
+                                        ? <MultipleItemInfoPanel items={this.prepareCustomerInsurancesDisplay()} title={`Застраховки: ${this.customerInsurances.length} бр.`} icon={"fas fa-car"} />
                                         : null
                                     }
                                 </div>
@@ -79,26 +80,36 @@ import { SingleItemInfoPanel, MultipleItemInfoPanel } from '../../common/ui/Info
             } else {
                 runInAction.bind(this)(() => {
                     this.model = customer[0];
+
+                    DbContext.getInsurances({ customerId: this.model.id }).exec((err, doc) => {
+                        if (err) {
+            
+                        } else {
+                            var dataArr = Object.keys(doc);
+                            this.customerInsurances = [];
+            
+                            runInAction.bind(this)(() => {
+                                for (let index = 0; index < dataArr.length; index++) {
+                                    this.customerInsurances.push(doc[dataArr[index]]);
+                                }
+                            })
+                        }
+                    })
                 })
             }
         })
     }
 
-    loadCustomerInsurances() {
-        DbContext.getInsurances({ customerId: this.props.match.params.customerId }).exec((err, doc) => {
-            if (err) {
+    prepareCustomerInsurancesDisplay(){
+        let result:any[] = [];
 
-            } else {
-                var dataArr = Object.keys(doc);
-                this.customerInsurances = [];
+        for (let index = 0; index < this.customerInsurances.length; index++) {
+            const insurance = this.customerInsurances[index];
+            
+            result.push(<NavLink to={`/insurance-info/${insurance.id}`} className="text text-primary">{this.displayDateFor(insurance.createdOn)}</NavLink>)
+        }
 
-                runInAction.bind(this)(() => {
-                    for (let index = 0; index < dataArr.length; index++) {
-                        this.customerInsurances.push(doc[dataArr[index]]);
-                    }
-                })
-            }
-        })
+        return result
     }
 }
 

@@ -84,8 +84,16 @@ export const DbContext = {
 
     getInsurancesPagesCount:(query?: any) => query ? db.insurances.count(query) : db.insurances.count({}),
 
-    updateInsurance: () => {
-        console.error("Not Implemented")
+    updateInsurance: (insurance: Insurance): Promise<DataResult> => {
+
+        return new Promise((resolve) => {
+            db.insurances.update({ id: insurance.id }, insurance, { multi: true }, (err, doc) => {
+                if (err)
+                    console.error(err);
+                else
+                    resolve(new DataResult(DbResponseType.success, null));
+            })
+        })
     },
 
     removeInsuranceById: (insuranceId: string) => {

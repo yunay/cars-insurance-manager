@@ -7,6 +7,7 @@ import { Insurance, Installment } from '../../models/insurances/Insurance';
 import { BaseComponent } from '../../common/ui/BaseComponent';
 import { Customer } from '../../models/customers/Customer';
 import { SingleItemInfoPanel, MultipleItemInfoPanel } from '../../common/ui/InfoPanel';
+import { NavLink } from 'react-router-dom';
 
 @observer class InsuranceInfoImpl extends BaseComponent<any>{
     @observable private model: Insurance;
@@ -35,29 +36,29 @@ import { SingleItemInfoPanel, MultipleItemInfoPanel } from '../../common/ui/Info
                         ? <div className="card-body">
                             <div className="form-row form-group">
                                 <div className="col-4">
-                                    <SingleItemInfoPanel text={`${this.customer.firstname} ${this.customer.secondname} ${this.customer.thirdname}`} title={'Имена на клиента'} icon={"fas fa-user-tie"} />
+                                    <SingleItemInfoPanel item={<NavLink to={`/insurance-info/${this.customer.id}`} className="text text-primary">{`${this.customer.firstname} ${this.customer.secondname} ${this.customer.thirdname}`}</NavLink>} title={'Имена на клиента'} icon={"fas fa-user-tie"} />
                                 </div>
                                 <div className="col-2">
-                                    <SingleItemInfoPanel text={`${this.displayDateFor(this.model.createdOn)}`} title={'Дата на създаване'} icon={"fas fa-calendar-alt"} />
+                                    <SingleItemInfoPanel item={`${this.displayDateFor(this.model.createdOn)}`} title={'Дата на създаване'} icon={"fas fa-calendar-alt"} />
                                 </div>
                                 <div className="col-2">
-                                    <SingleItemInfoPanel text={`${this.customer.phone}`} title={'Телефон'} icon={"fas fa-mobile-alt"} />
+                                    <SingleItemInfoPanel item={`${this.customer.phone}`} title={'Телефон'} icon={"fas fa-mobile-alt"} />
                                 </div>
                                 <div className="col-2">
-                                    <SingleItemInfoPanel text={`${this.model.carRegNumber}`} title={'Регистрационен №'} icon={"fas fa-car"} />
+                                    <SingleItemInfoPanel item={`${this.model.carRegNumber}`} title={'Регистрационен №'} icon={"fas fa-car"} />
                                 </div>
                                 <div className="col-2">
-                                    <SingleItemInfoPanel text={`${this.customer.statement}`} title={'Населено място'} icon={"fas fa-city"} />
+                                    <SingleItemInfoPanel item={`${this.customer.statement}`} title={'Населено място'} icon={"fas fa-city"} />
                                 </div>
                             </div>
                             <div className="form-row form-group">
                                 <div className="col-4">
-                                    <MultipleItemInfoPanel texts={this.prepareInstallmentsDisplay()} title={'Вноски'} icon={"far fa-clock"} />
+                                    <MultipleItemInfoPanel items={this.prepareInstallmentsDisplay()} title={'Вноски'} icon={"far fa-clock"} />
                                 </div>
                                 <div className="col-8">
                                     {
                                         this.model.note && this.model.note.trim() != ""
-                                            ? <SingleItemInfoPanel text={`${this.model.note}`} title={'Бележка'} icon={"far fa-sticky-note"} />
+                                            ? <SingleItemInfoPanel item={`${this.model.note}`} title={'Бележка'} icon={"far fa-sticky-note"} />
                                             : null
                                     }
                                 </div>
@@ -73,7 +74,7 @@ import { SingleItemInfoPanel, MultipleItemInfoPanel } from '../../common/ui/Info
         this.props.history.goBack();
     }
 
-    prepareInstallmentsDisplay(): string[] {
+    prepareInstallmentsDisplay(): any[] {
         let installmentsResult: string[] = []
 
         for (let index = 0; index < this.model.installments.length; index++) {
