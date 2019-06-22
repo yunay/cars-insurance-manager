@@ -25,7 +25,7 @@ interface AutoCompleteProps {
     shouldItemRender: (item: any, value: any) => boolean;
     getItemValue: (e: any) => string;
     renderItem: (item: any) => string;
-    initialValue?: string;
+    initialItemId?: string;
 }
 
 @observer export class AutoComplete extends React.Component<AutoCompleteProps, any> {
@@ -36,16 +36,20 @@ interface AutoCompleteProps {
         super(props)
 
         this.handleChange = this.handleChange.bind(this);
-        this.onSelect = this.onSelect.bind(this);
+        this.prepareSelectedItem = this.prepareSelectedItem.bind(this);
         this.shouldItemRender = this.shouldItemRender.bind(this);
         this.getItemValue = this.getItemValue.bind(this);
         this.renderItem = this.renderItem.bind(this);
         this.onMenuVisibilityChange = this.onMenuVisibilityChange.bind(this);
+    }
 
-        this.inputValue = this.props.initialValue ? this.props.initialValue : "";
+    componentDidMount(){
+        if(this.props.initialItemId)
+            this.prepareSelectedItem(this.props.initialItemId);
     }
 
     render() {
+
         return <AutoCompleteCmp
             wrapperProps={{ className: 'd-block' }}
             inputProps={{ className: 'form-control', type:"search" }}
@@ -56,7 +60,7 @@ interface AutoCompleteProps {
             renderItem={this.renderItem}
             value={this.inputValue}
             onChange={this.handleChange}
-            onSelect={this.onSelect}
+            onSelect={this.prepareSelectedItem}
             onMenuVisibilityChange={this.onMenuVisibilityChange}
         />
     }
@@ -81,7 +85,7 @@ interface AutoCompleteProps {
             </span>
     }
 
-    onSelect(itemId: any) {
+    prepareSelectedItem(itemId: any) {
         let selectedItem = this.props.items.filter(x=>x.id == itemId)[0];
         this.isSelected = true;
         this.inputValue = this.props.getItemValue(selectedItem);

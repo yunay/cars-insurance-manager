@@ -2,15 +2,19 @@ import * as React from 'react';
 import { DbContext, DbResponseType } from '../../data/DataStore'
 import { Customer } from '../../models/customers/Customer';
 import { observer } from 'mobx-react'
-import { observable, runInAction } from 'mobx';
+import { observable, runInAction, action } from 'mobx';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
 import { withRouter } from 'react-router';
+import { AutoComplete } from '../../common/ui/AutoComplete';
+import { Statement } from '../../models/common/Statement';
 
 @observer class UpdateCustomerImpl extends React.Component<any, any>{
     @observable model: Customer;
-
     @observable notificationPanel: any;
     @observable currentCarRegNumber: string;
+    @observable statements: Statement[];
+    @observable isStatementsLoaded:boolean = false;
+    @observable isModelLoaded:boolean = false;
 
     constructor(props: any) {
         super(props);
@@ -21,8 +25,16 @@ import { withRouter } from 'react-router';
         this.addCarRegNumber = this.addCarRegNumber.bind(this);
         this.handleCarRegNumberChange = this.handleCarRegNumberChange.bind(this);
 
+        this.handleStatementChange = this.handleStatementChange.bind(this);
+        this.handleStatementSelect = this.handleStatementSelect.bind(this);
+        this.shouldStatementRender = this.shouldStatementRender.bind(this);
+        this.getStatementValue = this.getStatementValue.bind(this);
+        this.renderStatement = this.renderStatement.bind(this);
+
         this.currentCarRegNumber = "";
+
         this.loadCustomer();
+        this.initStatementsData();
     }
 
     render() {
@@ -38,7 +50,7 @@ import { withRouter } from 'react-router';
                     </div>
                 </div>
                 {
-                    this.model
+                    this.isModelLoaded && this.isStatementsLoaded
                         ? <div className="card-body">
                             <div className="row">
                                 <div className="col">
@@ -57,7 +69,15 @@ import { withRouter } from 'react-router';
                                         </div>
                                         <div className="col-md-3">
                                             <label>Град / село</label>
-                                            <input type="text" className="form-control" name="city" value={this.model.statement} onChange={this.handleChange} />
+                                            <AutoComplete
+                                                items={this.statements && this.statements.length > 0 ? this.statements : null}
+                                                getItemValue={this.getStatementValue}
+                                                onChange={this.handleStatementChange}
+                                                onSelect={this.handleStatementSelect}
+                                                shouldItemRender={this.shouldStatementRender}
+                                                renderItem={this.renderStatement}
+                                                initialItemId={this.model.statementId}
+                                            />
                                         </div>
                                         <div className="col-md-3">
                                             <label>Телефонен номер</label>
@@ -72,8 +92,8 @@ import { withRouter } from 'react-router';
                                                     {
                                                         this.model.carRegistrationNumbers.map((carRegNumber, index) => {
                                                             return <div key={index}>
-                                                                <div className="car-reg-number">{carRegNumber}</div>
-                                                                <button type="button" className="close remove-reg-number" onClick={this.removeCarRegNumber.bind(this, index)}>
+                                                                <div className="removable-item">{carRegNumber}</div>
+                                                                <button type="button" className="close removable-item-x" onClick={this.removeCarRegNumber.bind(this, index)}>
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
@@ -137,12 +157,76 @@ import { withRouter } from 'react-router';
     }
 
     loadCustomer() {
-        DbContext.getCustomers({id:this.props.match.params.customerId}).exec((err, customer: Customer[]) => {
+        DbContext.getCustomers({ id: this.props.match.params.customerId }).exec((err, customer: Customer[]) => {
             if (err) {
 
             } else {
+                this.isModelLoaded = true;
                 runInAction.bind(this)(() => {
                     this.model = customer[0];
+                })
+            }
+        })
+    }
+
+    //#region Statements AutoComplete
+
+    @action handleStatementSelect(statement: Statement) {
+        this.model.statement = statement.statementWithType;
+        this.model.statementId = statement.id;
+    }
+
+    handleStatementChange(value: any) {
+        if (this.model.statement != "")
+            this.model.statement = "";
+    }
+
+    shouldStatementRender(statement: Statement, value: any) {
+        return statement.name.toLowerCase().indexOf(value.toLowerCase()) > -1
+    }
+
+    getStatementValue(statement: Statement) {
+        return `${statement.name}`
+    }
+
+    renderStatement(statement: Statement) {
+        return `${statement.name}`
+    }
+
+    initStatementsData() {
+        DbContext.getStatements().exec((err, doc) => {
+            if (err) {
+
+            } else {
+                var dataArr = Object.keys(doc);
+
+                runInAction.bind(this)(() => {
+                    this.statements = []
+                    this.isStatementsLoaded = true;
+
+                    for (let index = 0; index < dataArr.length; index++) {
+                        this.statements.push(doc[dataArr[index]]);
+                    }
+                })
+            }
+        })
+    }
+
+    //#endregion
+
+    initInsurersData() {
+        DbContext.getInsurers().exec((err, doc) => {
+            if (err) {
+
+            } else {
+                var dataArr = Object.keys(doc);
+
+                runInAction.bind(this)(() => {
+                    this.statements = []
+
+                    for (let index = 0; index < dataArr.length; index++) {
+                        this.statements.push(doc[dataArr[index]]);
+                    }
                 })
             }
         })

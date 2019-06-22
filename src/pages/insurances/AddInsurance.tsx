@@ -200,8 +200,10 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
     }
 
     handleCustomerChange(value: any) {
-        if (this.model.customerId != "")
+        if (this.model.customerId != ""){
             this.model.customerId = "";
+            this.model.carRegNumber = "";
+        }
     }
 
     shouldCustomerRender(customer: Customer, value: any) {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DbContext, DbResponseType } from '../../data/DataStore'
 import { Customer } from '../../models/customers/Customer';
 import { observer } from 'mobx-react'
-import { observable, runInAction } from 'mobx';
+import { observable, runInAction, action } from 'mobx';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
 import { withRouter } from 'react-router';
 import { AutoComplete } from '../../common/ui/AutoComplete';
@@ -152,8 +152,9 @@ import { Statement } from '../../models/common/Statement';
 
     //#region Statements AutoComplete
 
-    handleStatementSelect(statement: Statement) {
+    @action handleStatementSelect(statement: Statement) {
         this.model.statement = statement.statementWithType;
+        this.model.statementId = statement.id;
     }
 
     handleStatementChange(value: any) {
@@ -173,7 +174,6 @@ import { Statement } from '../../models/common/Statement';
         return `${statement.name}`
     }
 
-    
     initStatementsData(){
         DbContext.getStatements().exec((err, doc) => {
             if (err) {

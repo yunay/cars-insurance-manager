@@ -20,6 +20,10 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
     @observable insurers: Insurer[];
     @observable carRegNumbers: string[];
 
+    @observable isCustomersLoaded: boolean = false;
+    @observable isInsurersLoaded: boolean = false;
+    @observable isModelLoaded: boolean = false;
+
     constructor(props: any) {
         super(props);
 
@@ -50,6 +54,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
     }
 
     render() {
+
         return <>
             {this.notificationPanel}
             <div className="card shadow mb-4">
@@ -62,7 +67,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                     </div>
                 </div>
                 {
-                    this.model
+                    this.isModelLoaded && this.isCustomersLoaded && this.isInsurersLoaded
                         ? <div className="card-body">
                             <div className="form-row form-group">
                                 <div className="col-md-5">
@@ -75,6 +80,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                                             onSelect={this.handleCustomerSelect}
                                             shouldItemRender={this.shouldCustomerRender}
                                             renderItem={this.renderCustomer}
+                                            initialItemId={this.model.customerId}
                                         />
                                     </div>
                                 </div>
@@ -87,6 +93,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                                         onSelect={this.handleInsurerSelect}
                                         shouldItemRender={this.shouldInsurerRender}
                                         renderItem={this.renderInsurer}
+                                        initialItemId={this.model.insurerId}
                                     />
                                 </div>
                                 <div className="col-md-2">
@@ -205,8 +212,10 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
     }
 
     handleCustomerChange(value: any) {
-        if (this.model.customerId != "")
+        if (this.model.customerId != "") {
             this.model.customerId = "";
+            this.model.carRegNumber = "";
+        }
     }
 
     shouldCustomerRender(customer: Customer, value: any) {
@@ -251,12 +260,15 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
     //#region Init
 
     initData() {
-        this.initCustomersData();
+        this.initInsuranceData()
+        this.initCustomersData()
+
         this.initInsurersData();
-        this.initInsuranceData();
+
     }
 
     initCustomersData() {
+
         DbContext.getCustomers().exec((err, doc) => {
             if (err) {
 
@@ -265,6 +277,8 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
 
                 runInAction.bind(this)(() => {
                     this.customers = []
+                    this.isCustomersLoaded = true;
+
                     for (let index = 0; index < dataArr.length; index++) {
                         this.customers.push(doc[dataArr[index]]);
                     }
@@ -282,6 +296,8 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
 
                 runInAction.bind(this)(() => {
                     this.insurers = []
+                    this.isInsurersLoaded = true;
+
                     for (let index = 0; index < dataArr.length; index++) {
                         this.insurers.push(doc[dataArr[index]]);
                     }
@@ -295,6 +311,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
             if (err) {
 
             } else {
+                this.isModelLoaded = true;
                 runInAction.bind(this)(() => {
                     this.model = insurances[0];
                 })
