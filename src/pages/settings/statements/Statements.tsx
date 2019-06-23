@@ -33,7 +33,7 @@ import { StatementsResults } from './StatementsResults';
             <div className="card shadow mb-4">
                 <div className="card-header py-3">
                     <div className="row">
-                        <div className="col-9"><h4 className="m-0 font-weight-bold text-primary">Добавяне на населено място</h4></div>
+                        <div className="col-9"><h4 className="m-0 font-weight-bold text-success">Добавяне на населено място</h4></div>
                     </div>
                 </div>
                 <div className="card-body">

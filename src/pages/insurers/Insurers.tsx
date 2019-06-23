@@ -33,7 +33,7 @@ import { Constants } from '../../common/Constants';
         return <div className="card shadow mb-4">
             <div className="card-header py-3">
                 <div className="row">
-                    <div className="col-4"><h4 className="m-0 font-weight-bold text-primary">Застрахователи</h4></div>
+                    <div className="col-4"><h4 className="m-0 font-weight-bold text-success">Застрахователи</h4></div>
                     <div className="col-5"><input type="search" className="form-control" placeholder="Търси..." onChange={this.onSearchByString} /></div>
                     <div className="col-3">
                         <NavLink to={'/add-insurer'} className="btn btn-success btn-icon-split btn-add-new">

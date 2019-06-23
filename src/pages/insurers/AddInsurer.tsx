@@ -26,7 +26,7 @@ import { withRouter } from 'react-router';
             <div className="card shadow mb-4">
                 <div className="card-header py-3">
                     <div className="row">
-                        <div className="col-9"><h4 className="m-0 font-weight-bold text-primary">Добавяне на нов застраховател</h4></div>
+                        <div className="col-9"><h4 className="m-0 font-weight-bold text-success">Добавяне на нов застраховател</h4></div>
                         <div className="col-3">
                             <a href="javascript:;" className="btn btn-outline-primary btn-back" onClick={this.onBackBtnClick}><i className="fas fa-arrow-left"></i></a>
                         </div>

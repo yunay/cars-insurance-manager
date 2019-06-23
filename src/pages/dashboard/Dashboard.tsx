@@ -26,7 +26,7 @@ import { Graph, GraphType } from '../../common/ui/Graph';
   render() {
     return <div className="card shadow mb-4">
       <div className="card-header py-3">
-        <h4 className="m-0 font-weight-bold text-primary">Информативно табло</h4>
+        <h4 className="m-0 font-weight-bold text-success">Информативно табло</h4>
       </div>
       <div className="card-body">
         <div className="row">

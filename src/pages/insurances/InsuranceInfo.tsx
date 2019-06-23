@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import { observable, runInAction } from 'mobx';
 import { withRouter } from 'react-router';
 import { DbContext } from '../../data/DataStore';
-import { Insurance, Installment } from '../../models/insurances/Insurance';
+import { Insurance } from '../../models/insurances/Insurance';
 import { BaseComponent } from '../../common/ui/BaseComponent';
 import { Customer } from '../../models/customers/Customer';
 import { SingleItemInfoPanel, MultipleItemInfoPanel } from '../../common/ui/InfoPanel';
@@ -25,7 +25,7 @@ import { NavLink } from 'react-router-dom';
             <div className="card shadow mb-4">
                 <div className="card-header py-3">
                     <div className="row">
-                        <div className="col-9"><h4 className="m-0 font-weight-bold text-primary">Информация за застраховка</h4></div>
+                        <div className="col-9"><h4 className="m-0 font-weight-bold text-success">Информация за застраховка</h4></div>
                         <div className="col-3">
                             <a href="javascript:;" className="btn btn-outline-primary btn-back" onClick={this.onBackBtnClick}><i className="fas fa-arrow-left"></i></a>
                         </div>
