@@ -67,3 +67,8 @@
     font-size: 17px;
     font-weight: bold;
 }
+
+.required-field::after {
+    content: "*";
+    color: red;
+}

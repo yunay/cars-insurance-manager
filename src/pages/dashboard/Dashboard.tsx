@@ -7,8 +7,8 @@ import { Customer } from '../../models/customers/Customer';
 import { Insurer } from '../../models/insurers/Insurer';
 import { Insurance } from '../../models/insurances/Insurance';
 import { DbContext } from '../../data/DataStore';
-import { ArrayHelper } from '../../common/helpers/ArrayHelper';
 import { Graph, GraphType } from '../../common/ui/Graph';
+import { ArrayHelpers } from '../../common/helpers/ArrayHelpers';
 
 @observer export class Dashboard extends BaseComponent<any> {
 
@@ -124,7 +124,7 @@ import { Graph, GraphType } from '../../common/ui/Graph';
         vehicle.push(...this.customers[i].carRegistrationNumbers);
       }
 
-      this.vehicleCount = ArrayHelper.distinct(vehicle).length;
+      this.vehicleCount = ArrayHelpers.distinct(vehicle).length;
     }
   }
 

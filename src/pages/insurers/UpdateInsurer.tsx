@@ -5,8 +5,11 @@ import { observable, runInAction } from 'mobx';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
 import { Insurer } from '../../models/insurers/Insurer';
 import { withRouter } from 'react-router';
+import { InsurerValidation } from '../../models/Validations';
 
 @observer class UpdateInsurerImpl extends React.Component<any, any>{
+    private validator: InsurerValidation;
+
     @observable model: Insurer;
     @observable notificationPanel: any;
 
@@ -18,6 +21,7 @@ import { withRouter } from 'react-router';
         this.onBackBtnClick = this.onBackBtnClick.bind(this);
 
         this.loadInsurers();
+        this.validator = new InsurerValidation();
     }
 
     render() {
@@ -39,7 +43,7 @@ import { withRouter } from 'react-router';
                                 <div className="col">
                                     <div className="form-row form-group">
                                         <div className="col-md-12">
-                                            <label>Име</label>
+                                            <label className="required-field">Име</label>
                                             <input type="text" className="form-control" name="name" value={this.model.name} onChange={this.handleChange} />
                                         </div>
                                     </div>
@@ -63,14 +67,19 @@ import { withRouter } from 'react-router';
     }
 
     updateInsurer() {
-        DbContext.updateInsurer(this.props.match.params.insurerId, this.model).then((response) => {
+        if (this.validator.validate(this.model)) {
+            DbContext.updateInsurer(this.props.match.params.insurerId, this.model).then((response) => {
 
+                let notificationKey = `${+new Date()}_notificationKey`
+                if (response.reponseType == DbResponseType.success)
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно обновен застраховател.'} />
+                else
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка.'} />
+            })
+        } else {
             let notificationKey = `${+new Date()}_notificationKey`
-            if (response.reponseType == DbResponseType.success)
-                this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно обновен застраховател.'} />
-            else
-                this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка.'} />
-        })
+            this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Попълнете всички задължителни полета.'} />
+        }
     }
 
     loadInsurers() {

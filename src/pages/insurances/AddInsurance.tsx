@@ -27,6 +27,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         this.handleCarNumberRegChange = this.handleCarNumberRegChange.bind(this);
         this.handleInstallmentChange = this.handleInstallmentChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
+        this.handleCreatedOnChange = this.handleCreatedOnChange.bind(this);
         this.addInsurance = this.addInsurance.bind(this);
 
         this.handleCustomerChange = this.handleCustomerChange.bind(this);
@@ -63,7 +64,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                 </div>
                 <div className="card-body">
                     <div className="form-row form-group">
-                        <div className="col-md-5">
+                        <div className="col-md-4">
                             <label>Клиент</label>
                             <div>
                                 <AutoComplete
@@ -76,7 +77,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                                 />
                             </div>
                         </div>
-                        <div className="col-md-5">
+                        <div className="col-md-4">
                             <label>Застраховател</label>
                             <AutoComplete
                                 items={this.insurers && this.insurers.length > 0 ? this.insurers : null}
@@ -99,6 +100,12 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                                         : null
                                 }
                             </select>
+                        </div>
+                        <div className="col-md-2">
+                            <div className="mr-10">
+                                <label>Дата на създаване</label>
+                                <DatePicker onChange={this.handleCreatedOnChange} value={this.model.createdOn} />
+                            </div>
                         </div>
                     </div>
                     <div className="form-row form-group">
@@ -168,6 +175,10 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         this.currentInstallment.date = date;
     }
 
+    handleCreatedOnChange(date: any) {
+        this.model.createdOn = date;
+    }
+
     handleCarNumberRegChange(e: any) {
         this.model.carRegNumber = e.target.value;
     }
@@ -199,7 +210,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         this.loadCustomerCarRegNumbers();
     }
 
-    handleCustomerChange(value: any) {
+    handleCustomerChange() {
         if (this.model.customerId != ""){
             this.model.customerId = "";
             this.model.carRegNumber = "";
@@ -222,11 +233,11 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
 
     //#region Insurers AutoComplete
 
-    handleInsurerSelect(insurer: Insurance) {
+    handleInsurerSelect(insurer: Insurer) {
         this.model.insurerId = insurer.id;
     }
 
-    handleInsurerChange(value: any) {
+    handleInsurerChange() {
         if (this.model.insurerId != "")
             this.model.insurerId = "";
     }

@@ -16,12 +16,12 @@ export class Installment{
 
 export class Insurance {
 
-    constructor(id: string = "", customerId: string = "", insurerId: string = "", note: string = "", installments:Installment[] = [], carRegNumber:string = "") {
+    constructor(id: string = "", customerId: string = "", insurerId: string = "", date = moment().toDate(), note: string = "", installments:Installment[] = [], carRegNumber:string = "") {
 
         this.id = id;
         this.customerId = customerId;
         this.insurerId = insurerId;
-        this.createdOn = moment().toDate();
+        this.createdOn = date;
         this.note = note;
         this.installments = installments;
         this.carRegNumber = carRegNumber;

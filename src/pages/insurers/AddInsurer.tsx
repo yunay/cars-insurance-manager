@@ -1,13 +1,16 @@
-import * as React from 'react';
-import { DbContext, DbResponseType } from '../../data/DataStore'
-import { observer } from 'mobx-react'
 import { observable } from 'mobx';
-import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
-import { Insurer } from '../../models/insurers/Insurer';
+import { observer } from 'mobx-react';
+import * as React from 'react';
 import { withRouter } from 'react-router';
+import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
+import { DbContext, DbResponseType } from '../../data/DataStore';
+import { Insurer } from '../../models/insurers/Insurer';
+import { InsurerValidation } from '../../models/Validations';
 
 @observer class AddInsurerImpl extends React.Component<any, any>{
     private model: Insurer;
+    private validator: InsurerValidation;
+
     @observable notificationPanel: any;
 
     constructor(props: any) {
@@ -18,6 +21,7 @@ import { withRouter } from 'react-router';
         this.onBackBtnClick = this.onBackBtnClick.bind(this);
 
         this.model = new Insurer();
+        this.validator = new InsurerValidation();
     }
 
     render() {
@@ -37,7 +41,7 @@ import { withRouter } from 'react-router';
                         <div className="col">
                             <div className="form-row form-group">
                                 <div className="col-md-12">
-                                    <label>Име</label>
+                                    <label className="required-field">Име</label>
                                     <input type="text" className="form-control" name="name" value={this.model.name} onChange={this.handleChange} />
                                 </div>
                             </div>
@@ -49,7 +53,7 @@ import { withRouter } from 'react-router';
         </>
     }
 
-    onBackBtnClick(){
+    onBackBtnClick() {
         this.props.history.goBack();
     }
 
@@ -58,14 +62,19 @@ import { withRouter } from 'react-router';
     }
 
     addInsurer() {
-        DbContext.addInsurer(this.model).then((response) => {
+        if (this.validator.validate(this.model)) {
+            DbContext.addInsurer(this.model).then((response) => {
 
+                let notificationKey = `${+new Date()}_notificationKey`
+                if (response.reponseType == DbResponseType.success)
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно добавен застраховател.'} />
+                else
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка при добавяне на нов застраховател.'} />
+            })
+        } else {
             let notificationKey = `${+new Date()}_notificationKey`
-            if (response.reponseType == DbResponseType.success)
-                this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно добавен застраховател.'} />
-            else
-                this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка при добавяне на нов застраховател.'} />
-        })
+            this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Попълнете всички задължителни полета.'} />
+        }
     }
 }
 

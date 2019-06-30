@@ -7,9 +7,11 @@ import { NotificationPanel, NotificationType } from '../../common/ui/Notificatio
 import { withRouter } from 'react-router';
 import { AutoComplete } from '../../common/ui/AutoComplete';
 import { Statement } from '../../models/common/Statement';
+import { CustomerValidation } from '../../models/Validations';
 
 @observer class AddCustomerImpl extends React.Component<any, any>{
     private model: Customer;
+    private validator: CustomerValidation;
 
     @observable notificationPanel: any;
     @observable currentCarRegNumber: string;
@@ -31,6 +33,7 @@ import { Statement } from '../../models/common/Statement';
         this.renderStatement = this.renderStatement.bind(this);
 
         this.model = new Customer();
+        this.validator = new CustomerValidation();
         this.currentCarRegNumber = "";
 
         this.initStatementsData();
@@ -53,7 +56,7 @@ import { Statement } from '../../models/common/Statement';
                         <div className="col">
                             <div className="form-row form-group">
                                 <div className="col-md-2">
-                                    <label>Име</label>
+                                    <label className="required-field">Име</label>
                                     <input type="text" className="form-control" name="firstname" value={this.model.firstname} onChange={this.handleChange} />
                                 </div>
                                 <div className="col-md-2">
@@ -65,7 +68,7 @@ import { Statement } from '../../models/common/Statement';
                                     <input type="text" className="form-control" name="thirdname" value={this.model.thirdname} onChange={this.handleChange} />
                                 </div>
                                 <div className="col-md-3">
-                                    <label>Град / село</label>
+                                    <label className="required-field">Град / село</label>
                                     <AutoComplete
                                         items={this.statements && this.statements.length > 0 ? this.statements : null}
                                         getItemValue={this.getStatementValue}
@@ -76,7 +79,7 @@ import { Statement } from '../../models/common/Statement';
                                     />
                                 </div>
                                 <div className="col-md-3">
-                                    <label>Телефонен номер</label>
+                                    <label className="required-field">Телефонен номер</label>
                                     <input type="text" className="form-control" name="phone" value={this.model.phone} onChange={this.handleChange} />
                                 </div>
                             </div>
@@ -140,14 +143,20 @@ import { Statement } from '../../models/common/Statement';
     }
 
     addCustomer() {
-        DbContext.addCustomer(this.model).then((response) => {
 
+        if (this.validator.validate(this.model)) {
+            DbContext.addCustomer(this.model).then((response) => {
+
+                let notificationKey = `${+new Date()}_notificationKey`
+                if (response.reponseType == DbResponseType.success)
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно добавен нов клиент.'} />
+                else
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка при добавяне на нов клиент.'} />
+            })
+        } else {
             let notificationKey = `${+new Date()}_notificationKey`
-            if (response.reponseType == DbResponseType.success)
-                this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно добавен нов клиент.'} />
-            else
-                this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка при добавяне на нов клиент.'} />
-        })
+            this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Попълнете всички задължителни полета.'} />
+        }
     }
 
     //#region Statements AutoComplete
@@ -157,7 +166,7 @@ import { Statement } from '../../models/common/Statement';
         this.model.statementId = statement.id;
     }
 
-    handleStatementChange(value: any) {
+    handleStatementChange() {
         if(this.model.statement != "")
             this.model.statement = "";
     }
