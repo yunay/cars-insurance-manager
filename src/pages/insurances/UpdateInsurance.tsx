@@ -1,15 +1,16 @@
+import { action, observable, runInAction } from 'mobx';
+import { observer } from 'mobx-react';
 import * as React from 'react';
-import { DbContext, DbResponseType } from '../../data/DataStore'
-import { observer } from 'mobx-react'
-import { observable, action, runInAction } from 'mobx';
-import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
-import { Insurance, Installment } from '../../models/insurances/Insurance';
-import { DatePicker } from '../../common/ui/DatePicker';
 import { withRouter } from 'react-router';
-import { Customer } from '../../models/customers/Customer';
-import { Insurer } from '../../models/insurers/Insurer';
-import { AutoComplete } from '../../common/ui/AutoComplete'
+import { AutoComplete } from '../../common/ui/AutoComplete';
 import { BaseComponent } from '../../common/ui/BaseComponent';
+import { DatePicker } from '../../common/ui/DatePicker';
+import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
+import { DbContext, DbResponseType } from '../../data/DataStore';
+import { Customer } from '../../models/customers/Customer';
+import { Installment, Insurance } from '../../models/insurances/Insurance';
+import { Insurer } from '../../models/insurers/Insurer';
+import { InsuranceValidation } from '../../models/Validations';
 
 @observer class UpdateInsuranceImpl extends BaseComponent<any>{
 
@@ -24,6 +25,8 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
     @observable isInsurersLoaded: boolean = false;
     @observable isModelLoaded: boolean = false;
 
+    private validator: InsuranceValidation;
+
     constructor(props: any) {
         super(props);
 
@@ -31,6 +34,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         this.handleCarNumberRegChange = this.handleCarNumberRegChange.bind(this);
         this.handleInstallmentChange = this.handleInstallmentChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
+        this.handleCreatedOnChange = this.handleCreatedOnChange.bind(this);
         this.updateInsurance = this.updateInsurance.bind(this);
 
         this.handleCustomerChange = this.handleCustomerChange.bind(this);
@@ -50,6 +54,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
 
         this.currentInstallment = new Installment();
         this.model = new Insurance();
+        this.validator = new InsuranceValidation();
         this.initData();
     }
 
@@ -70,8 +75,8 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                     this.isModelLoaded && this.isCustomersLoaded && this.isInsurersLoaded
                         ? <div className="card-body">
                             <div className="form-row form-group">
-                                <div className="col-md-5">
-                                    <label>Клиент</label>
+                                <div className="col-md-4">
+                                    <label className="required-field">Клиент</label>
                                     <div>
                                         <AutoComplete
                                             items={this.customers && this.customers.length > 0 ? this.customers : null}
@@ -84,8 +89,8 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                                         />
                                     </div>
                                 </div>
-                                <div className="col-md-5">
-                                    <label>Застраховател</label>
+                                <div className="col-md-4">
+                                    <label className="required-field">Застраховател</label>
                                     <AutoComplete
                                         items={this.insurers && this.insurers.length > 0 ? this.insurers : null}
                                         getItemValue={this.getInsurerValue}
@@ -97,7 +102,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                                     />
                                 </div>
                                 <div className="col-md-2">
-                                    <label>Рег. номер</label>
+                                    <label >Рег. номер</label>
                                     <select className="form-control" disabled={this.model.customerId ? false : true} onChange={this.handleCarNumberRegChange} value={this.model.carRegNumber}>
                                         <option>Избери</option>
                                         {
@@ -108,6 +113,12 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                                                 : null
                                         }
                                     </select>
+                                </div>
+                                <div className="col-md-2">
+                                    <div className="mr-10">
+                                        <label>Дата на създаване</label>
+                                        <DatePicker onChange={this.handleCreatedOnChange} value={this.model.createdOn} />
+                                    </div>
                                 </div>
                             </div>
                             <div className="form-row form-group">
@@ -136,11 +147,11 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                             }
                             <div className="form-row form-group">
                                 <div className="mr-10">
-                                    <label>Дата на вноска</label>
+                                    <label className="required-field">Дата и сума на вноска</label>
                                     <DatePicker onChange={this.handleDateChange} value={this.currentInstallment.date} />
                                 </div>
                                 <div className="mr-10">
-                                    <label>Сума на вноска</label>
+                                    <label>&nbsp;</label>
                                     <div className="input-group">
                                         <input type="number" className="form-control" name="value" value={this.currentInstallment.value} onChange={this.handleInstallmentChange} />
                                         <div className="input-group-append">
@@ -155,7 +166,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                                     </div>
                                 </div>
                             </div>
-                            <a href="javascript://" onClick={this.updateInsurance} className="btn btn-success btn-block"><i className="fas fa-fw fa-plus"></i> Обнови</a>
+                            <a href="javascript://" onClick={this.updateInsurance} className="btn btn-primary btn-block"><i className="far fa-fw fa-edit"></i> Обнови</a>
                         </div>
                         : null
                 }
@@ -179,25 +190,35 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         this.currentInstallment.date = date;
     }
 
+    handleCreatedOnChange(date: any) {
+        this.model.createdOn = date;
+    }
+
     handleCarNumberRegChange(e: any) {
         this.model.carRegNumber = e.target.value;
     }
 
     updateInsurance() {
-        DbContext.updateInsurance(this.model).then((response) => {
+        if (this.validator.validate(this.model)) {
+            DbContext.updateInsurance(this.model).then((response) => {
 
+                let notificationKey = `${+new Date()}_notificationKey`
+                if (response.reponseType == DbResponseType.success)
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно обновена застраховка.'} />
+                else
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка.'} />
+            })
+        } else {
             let notificationKey = `${+new Date()}_notificationKey`
-            if (response.reponseType == DbResponseType.success)
-                this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно обновена застраховка.'} />
-            else
-                this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка.'} />
-        })
+            this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Попълнете всички задължителни полета.'} />
+        }
     }
 
-
     @action addInstallment() {
-        this.model.installments.push(this.currentInstallment);
-        this.currentInstallment = new Installment();
+        if (this.currentInstallment && this.currentInstallment.value && this.currentInstallment.date) {
+            this.model.installments.push(this.currentInstallment);
+            this.currentInstallment = new Installment();
+        }
     }
 
     removeInstallment(index: number) {
@@ -211,7 +232,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         this.loadCustomerCarRegNumbers();
     }
 
-    handleCustomerChange(value: any) {
+    handleCustomerChange() {
         if (this.model.customerId != "") {
             this.model.customerId = "";
             this.model.carRegNumber = "";
@@ -238,7 +259,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         this.model.insurerId = insurer.id;
     }
 
-    handleInsurerChange(value: any) {
+    handleInsurerChange() {
         if (this.model.insurerId != "")
             this.model.insurerId = "";
     }
@@ -264,7 +285,6 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
         this.initCustomersData()
 
         this.initInsurersData();
-
     }
 
     initCustomersData() {

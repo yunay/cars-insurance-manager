@@ -47,7 +47,7 @@ import { InsurerValidation } from '../../models/Validations';
                                             <input type="text" className="form-control" name="name" value={this.model.name} onChange={this.handleChange} />
                                         </div>
                                     </div>
-                                    <a href="javascript://" onClick={this.updateInsurer} className="btn btn-primary btn-block"><i className="fas fa-fw fa-edit"></i> Обнови</a>
+                                    <a href="javascript://" onClick={this.updateInsurer} className="btn btn-primary btn-block"><i className="far fa-fw fa-edit"></i> Обнови</a>
                                 </div>
                             </div>
                         </div>

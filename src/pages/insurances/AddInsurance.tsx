@@ -10,10 +10,13 @@ import { Customer } from '../../models/customers/Customer';
 import { Insurer } from '../../models/insurers/Insurer';
 import { AutoComplete } from '../../common/ui/AutoComplete'
 import { BaseComponent } from '../../common/ui/BaseComponent';
+import { InsuranceValidation } from '../../models/Validations';
 
 @observer class AddInsuranceImpl extends BaseComponent<any>{
 
     private model: Insurance;
+    private validator: InsuranceValidation;
+
     @observable currentInstallment: Installment;
     @observable notificationPanel: any;
     @observable customers: Customer[];
@@ -47,6 +50,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
 
         this.currentInstallment = new Installment();
         this.model = new Insurance();
+        this.validator = new InsuranceValidation();
         this.initData();
     }
 
@@ -65,7 +69,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                 <div className="card-body">
                     <div className="form-row form-group">
                         <div className="col-md-4">
-                            <label>Клиент</label>
+                            <label className="required-field">Клиент</label>
                             <div>
                                 <AutoComplete
                                     items={this.customers && this.customers.length > 0 ? this.customers : null}
@@ -78,7 +82,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                             </div>
                         </div>
                         <div className="col-md-4">
-                            <label>Застраховател</label>
+                            <label className="required-field">Застраховател</label>
                             <AutoComplete
                                 items={this.insurers && this.insurers.length > 0 ? this.insurers : null}
                                 getItemValue={this.getInsurerValue}
@@ -89,7 +93,7 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                             />
                         </div>
                         <div className="col-md-2">
-                            <label>Рег. номер</label>
+                            <label className="required-field">Рег. номер</label>
                             <select className="form-control" disabled={this.model.customerId ? false : true} onChange={this.handleCarNumberRegChange} value={this.model.carRegNumber}>
                                 <option>Избери</option>
                                 {
@@ -134,11 +138,11 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
                     }
                     <div className="form-row form-group">
                         <div className="mr-10">
-                            <label>Дата на вноска</label>
+                            <label className="required-field">Дата на вноска и сума на вноска</label>
                             <DatePicker onChange={this.handleDateChange} value={this.currentInstallment.date} />
                         </div>
                         <div className="mr-10">
-                            <label>Сума на вноска</label>
+                            <label>&nbsp;</label>
                             <div className="input-group">
                                 <input type="number" className="form-control" name="value" value={this.currentInstallment.value} onChange={this.handleInstallmentChange} />
                                 <div className="input-group-append">
@@ -184,19 +188,23 @@ import { BaseComponent } from '../../common/ui/BaseComponent';
     }
 
     addInsurance() {
-        DbContext.addInsurance(this.model).then((response) => {
+        if (this.validator.validate(this.model)) {
+            DbContext.addInsurance(this.model).then((response) => {
 
-            let notificationKey = `${+new Date()}_notificationKey`
-            if (response.reponseType == DbResponseType.success)
-                this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно добавена застраховка.'} />
-            else
-                this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка при добавяне на нова застраховка.'} />
-        })
+                let notificationKey = `${+new Date()}_notificationKey`
+                if (response.reponseType == DbResponseType.success)
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно добавена застраховка.'} />
+                else
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка при добавяне на нова застраховка.'} />
+            })
+        } 
     }
 
     @action addInstallment() {
-        this.model.installments.push(this.currentInstallment);
-        this.currentInstallment = new Installment();
+        if (this.currentInstallment && this.currentInstallment.value && this.currentInstallment.date) {
+            this.model.installments.push(this.currentInstallment);
+            this.currentInstallment = new Installment();
+        }
     }
 
     removeInstallment(index: number) {

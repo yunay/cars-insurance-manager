@@ -8,6 +8,7 @@ import { withRouter } from 'react-router';
 import { AutoComplete } from '../../common/ui/AutoComplete';
 import { Statement } from '../../models/common/Statement';
 import { CustomerValidation } from '../../models/Validations';
+import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
 
 @observer class AddCustomerImpl extends React.Component<any, any>{
     private model: Customer;
@@ -131,7 +132,8 @@ import { CustomerValidation } from '../../models/Validations';
     }
 
     addCarRegNumber() {
-        this.model.carRegistrationNumbers.push(this.currentCarRegNumber);
+        if (!ValidationHelpers.isStringNullOrEmpty(this.currentCarRegNumber))
+            this.model.carRegistrationNumbers.push(this.currentCarRegNumber);
     }
 
     removeCarRegNumber(index: number) {
