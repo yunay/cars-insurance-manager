@@ -1,19 +1,14 @@
 import { Line } from 'react-chartjs-2';
 import React = require('react');
 
-export enum GraphType {
-    Line
-}
-
 interface GraphProps {
-    graphType: GraphType;
     data:number[];
     label:string;
     datasetColor:string;
     labels:string[];
 }
 
-export class Graph extends React.Component<GraphProps, any>{
+export class LineGraph extends React.Component<GraphProps, any>{
 
     data = {
         labels: this.props.labels,
