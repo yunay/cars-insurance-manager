@@ -7,9 +7,8 @@ import { Customer } from '../../models/customers/Customer';
 import { Insurer } from '../../models/insurers/Insurer';
 import { Insurance } from '../../models/insurances/Insurance';
 import { DbContext } from '../../data/DataStore';
-import { ArrayHelpers } from '../../common/helpers/ArrayHelpers';
-import { LineGraph } from '../../common/ui/Graphs';
-
+import { ArrayHelpers } from '../../common/helpers/Helpers';
+import { InsurancesGraph } from './InsurancesGraph';
 
 @observer export class Dashboard extends BaseComponent<any> {
 
@@ -45,8 +44,8 @@ import { LineGraph } from '../../common/ui/Graphs';
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-6">
-                        <LineGraph data={[8, 2, 2, 1, 1, 3, 4, 8]} label="Брой застраховки" labels={["Jan", "Feb", "Mart", "Apr", "Jun", "July", "Aug","Test"]} datasetColor="red" />
+                    <div className="col-8">
+                        <InsurancesGraph/>
                     </div>
                 </div>
             </div>
@@ -121,9 +120,5 @@ import { LineGraph } from '../../common/ui/Graphs';
 
             this.vehicleCount = ArrayHelpers.distinct(vehicle).length;
         }
-    }
-
-    loadInsurancesRateGraph() {
-
     }
 }

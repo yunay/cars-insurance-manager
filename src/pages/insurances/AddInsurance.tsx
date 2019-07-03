@@ -11,6 +11,7 @@ import { Insurer } from '../../models/insurers/Insurer';
 import { AutoComplete } from '../../common/ui/AutoComplete'
 import { BaseComponent } from '../../common/ui/BaseComponent';
 import { InsuranceValidation } from '../../models/Validations';
+import { DateHelpers } from '../../common/helpers/Helpers';
 
 @observer class AddInsuranceImpl extends BaseComponent<any>{
 
@@ -176,11 +177,11 @@ import { InsuranceValidation } from '../../models/Validations';
     }
 
     handleDateChange(date: any) {
-        this.currentInstallment.date = date;
+        this.currentInstallment.date = DateHelpers.getDate(date);
     }
 
     handleCreatedOnChange(date: any) {
-        this.model.createdOn = date;
+        this.model.createdOn = DateHelpers.getDate(date);
     }
 
     handleCarNumberRegChange(e: any) {
