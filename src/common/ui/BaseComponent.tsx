@@ -3,7 +3,7 @@ import * as moment from 'moment';
 
 export abstract class BaseComponent<TProps> extends React.Component<TProps, any>{
 
-    protected displayDateFor(date: Date): string {
+    protected displayDate(date: Date): string {
         if (date) {
             let result = moment(date);
 
@@ -11,5 +11,12 @@ export abstract class BaseComponent<TProps> extends React.Component<TProps, any>
         }
 
         return "";
+    }
+
+    protected displayCurrancyValue(value: any) {
+        if (isNaN(value))
+            return value;
+
+        return parseFloat(value).toFixed(2);
     }
 }

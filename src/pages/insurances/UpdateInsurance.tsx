@@ -134,7 +134,7 @@ import { InsuranceValidation } from '../../models/Validations';
                                             {
                                                 this.model.installments.map((installment, index) => {
                                                     return <div key={index}>
-                                                        <div className="removable-item">{`Дата на вноска: ${this.displayDateFor(installment.date)}, Сума на вноска: ${installment.value}`}</div>
+                                                        <div className="removable-item">{`Дата на вноска: ${this.displayDate(installment.date)}, Сума на вноска: ${this.displayCurrancyValue(installment.value)} лв.`}</div>
                                                         <button type="button" className="close removable-item-x" onClick={this.removeInstallment.bind(this, index)}>
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>

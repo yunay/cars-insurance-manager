@@ -39,7 +39,7 @@ import { NavLink } from 'react-router-dom';
                                     <SingleItemInfoPanel item={<NavLink to={`/insurance-info/${this.customer.id}`} className="text text-primary">{`${this.customer.firstname} ${this.customer.secondname} ${this.customer.thirdname}`}</NavLink>} title={'Имена на клиента'} icon={"fas fa-user-tie"} />
                                 </div>
                                 <div className="col-2">
-                                    <SingleItemInfoPanel item={`${this.displayDateFor(this.model.createdOn)}`} title={'Дата на създаване'} icon={"fas fa-calendar-alt"} />
+                                    <SingleItemInfoPanel item={`${this.displayDate(this.model.createdOn)}`} title={'Дата на създаване'} icon={"fas fa-calendar-alt"} />
                                 </div>
                                 <div className="col-2">
                                     <SingleItemInfoPanel item={`${this.customer.phone}`} title={'Телефон'} icon={"fas fa-mobile-alt"} />
@@ -80,7 +80,7 @@ import { NavLink } from 'react-router-dom';
         for (let index = 0; index < this.model.installments.length; index++) {
             const installment = this.model.installments[index];
 
-            installmentsResult.push(`${this.displayDateFor(installment.date)} ${installment.value} лв.`)
+            installmentsResult.push(`${this.displayDate(installment.date)} ${installment.value} лв.`)
         }
 
         return installmentsResult;

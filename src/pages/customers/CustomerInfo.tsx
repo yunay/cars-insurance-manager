@@ -106,7 +106,7 @@ import { NavLink } from 'react-router-dom';
         for (let index = 0; index < this.customerInsurances.length; index++) {
             const insurance = this.customerInsurances[index];
             
-            result.push(<NavLink to={`/insurance-info/${insurance.id}`} className="text text-primary">{this.displayDateFor(insurance.createdOn)}</NavLink>)
+            result.push(<NavLink to={`/insurance-info/${insurance.id}`} className="text text-primary">{this.displayDate(insurance.createdOn)}</NavLink>)
         }
 
         return result

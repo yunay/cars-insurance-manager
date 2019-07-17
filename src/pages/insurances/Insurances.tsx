@@ -78,7 +78,7 @@ import { Customer } from '../../models/customers/Customer';
                                                         return <tr key={insurance.id}>
                                                             <td>{this.renderCustomerInfo(insurance.customerId)}</td>
                                                             <td>{insurance.carRegNumber}</td>
-                                                            <td>{this.displayDateFor(insurance.createdOn)}</td>
+                                                            <td>{this.displayDate(insurance.createdOn)}</td>
                                                             <td>{insurance.installments.length}</td>
                                                             <td>
                                                                 <div className="d-flex justify-content-around">

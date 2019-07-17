@@ -12,43 +12,50 @@ import { ArrayHelpers } from '../../common/helpers/Helpers';
 
     @observable insurances: Insurance[]
     @observable years: number[];
-    @observable currentYear: number;
-    @observable currentYearCountOfInsurancesByMonth: number[];
+    @observable selectedYear: number;
 
-    constructor(props:any) {
+    private currentYearCountOfInsurancesByMonth: number[];
+
+    constructor(props: any) {
         super(props);
 
+        this.handleSelectedYearChange = this.handleSelectedYearChange.bind(this);
+
         this.init();
+        this.currentYearCountOfInsurancesByMonth = [];
     }
 
     render() {
+
         return <div className="row">
             <div className="col-10">
-             
+
             </div>
             <div className="col-2">
-                <select className="form-control">
+                <select className="form-control" onChange={this.handleSelectedYearChange} value={this.selectedYear}>
                     {
                         this.years && this.years.length > 0
-                            ? this.years.map(year => {
-                                return <option key={year}>{year}</option>
+                            ? this.years.map((year) => {
+                                return <option value={year} key={year}>{year}</option>
                             })
-                            :null
+                            : null
                     }
                 </select>
             </div>
-            {
-                this.currentYearCountOfInsurancesByMonth
-                    ? <LineGraph data={[8, 2, 2, 1, 1, 3, 4, 8]} label="Брой застраховки" labels={Constants.monthsBG} datasetColor="red" />
-                    : null
-            }
+            <LineGraph data={this.currentYearCountOfInsurancesByMonth} label="Брой застраховки" labels={Constants.monthsBG} datasetColor="red" />
         </div>
     }
 
+    @action handleSelectedYearChange(e: any) {
+        this.selectedYear = e.target.value;
+        this.prepareCountOfInsurancesByMonthForCurrentYear();
+    }
+
     @action init() {
-        this.currentYear = new Date().getFullYear();
+        this.selectedYear = new Date().getFullYear();
         this.loadInsurances();
     }
+
 
     @action loadInsurances() {
         DbContext.getInsurances().exec((err, doc) => {
@@ -58,8 +65,7 @@ import { ArrayHelpers } from '../../common/helpers/Helpers';
                 var dataArr = Object.keys(doc);
                 this.insurances = [];
                 this.years = [];
-                this.currentYearCountOfInsurancesByMonth = [];
-
+                
                 runInAction.bind(this)(() => {
                     for (let index = 0; index < dataArr.length; index++) {
                         this.insurances.push(doc[dataArr[index]]);
@@ -71,16 +77,18 @@ import { ArrayHelpers } from '../../common/helpers/Helpers';
                         this.years.push(currentItem.createdOn.getFullYear())
                     }
 
-                    this.years = ArrayHelpers.distinct(this.years).sort((a,b)=>a-b);
+                    this.years = ArrayHelpers.distinct(this.years).sort((a, b) => a - b);
                     this.prepareCountOfInsurancesByMonthForCurrentYear();
                 })
             }
         })
     }
 
-    @action prepareCountOfInsurancesByMonthForCurrentYear() {
+    prepareCountOfInsurancesByMonthForCurrentYear() {
+        this.currentYearCountOfInsurancesByMonth = [];
+
         for (var i = 1; i <= 12; i++) {
-            this.currentYearCountOfInsurancesByMonth.push(this.insurances.filter(x => x.createdOn.getFullYear() == this.currentYear && x.createdOn.getMonth() == i).length)
+            this.currentYearCountOfInsurancesByMonth.push(this.insurances.filter(x => x.createdOn.getFullYear() == this.selectedYear && x.createdOn.getMonth() == i).length)
         }
     }
 }

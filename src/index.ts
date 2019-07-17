@@ -16,7 +16,8 @@ const createWindow = async () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1366,
-    height: 768,
+      height: 768,
+      webPreferences: { nodeIntegration: true }
   });
 
   mainWindow.setMenuBarVisibility(false);
