@@ -10,7 +10,7 @@ import { ArrayHelpers } from '../../common/helpers/Helpers';
 
 @observer export class InsurancesGraph extends BaseComponent<any>{
 
-    @observable insurances: Insurance[]
+    insurances: Insurance[]
     @observable years: number[];
     @observable selectedYear: number;
 

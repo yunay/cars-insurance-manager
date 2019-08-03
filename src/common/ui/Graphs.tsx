@@ -1,5 +1,6 @@
-import { Line } from 'react-chartjs-2';
+import { Line, Pie } from 'react-chartjs-2';
 import React = require('react');
+import { Constants } from '../Constants';
 
 interface GraphProps {
     data: number[];
@@ -38,5 +39,22 @@ export class LineGraph extends React.Component<GraphProps, any>{
         };
 
         return <Line data={data} />
+    }
+}
+
+export class PieGraph extends React.Component<GraphProps, any>{
+
+    render() {
+        let data = {
+            labels: this.props.labels,
+            datasets: [{
+                data: this.props.data,
+                backgroundColor: Constants.getColors().slice(0, this.props.data.length),
+                hoverBackgroundColor: Constants.getColors().slice(0, this.props.data.length)
+            }]
+        };
+
+
+        return <Pie data={data} />
     }
 }

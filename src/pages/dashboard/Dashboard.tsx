@@ -9,6 +9,7 @@ import { Insurance } from '../../models/insurances/Insurance';
 import { DbContext } from '../../data/DataStore';
 import { ArrayHelpers } from '../../common/helpers/Helpers';
 import { InsurancesGraph } from './InsurancesGraph';
+import { InsurersPie } from './InsurersPie';
 
 @observer export class Dashboard extends BaseComponent<any> {
 
@@ -44,8 +45,11 @@ import { InsurancesGraph } from './InsurancesGraph';
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-8">
+                    <div className="col-7">
                         <InsurancesGraph/>
+                    </div>
+                    <div className="col-5">
+                        <InsurersPie />
                     </div>
                 </div>
             </div>
