@@ -29,7 +29,8 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "yarn"
+        "packageManager": "npm",
+        "icon": "images/icon.ico"
       },
       "electronWinstallerConfig": {
         "name": "cars_insurance_manager"
@@ -42,7 +43,8 @@
       },
       "windowsStoreConfig": {
         "packageName": "",
-        "name": "carsinsurancemanager"
+        "name": "carsinsurancemanager",
+        "icon": "images/icon.png"
       }
     }
   },

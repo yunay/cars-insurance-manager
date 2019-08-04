@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CountInfoCard, CountInfoCardType } from '../../common/ui/CountInfoCard';
+import { CountInfoCard, CountInfoCardType, CardContentSize } from '../../common/ui/CountInfoCard';
 import { BaseComponent } from '../../common/ui/BaseComponent';
 import { observer } from 'mobx-react';
 import { observable, runInAction } from 'mobx';
@@ -49,7 +49,16 @@ import { InsurersPie } from './InsurersPie';
                         <InsurancesGraph/>
                     </div>
                     <div className="col-5">
-                        <InsurersPie />
+                        <div className="form-row">
+                            <div className="form-group col-12">
+                                <CountInfoCard text={"Брой изтичащи услуги"} type={CountInfoCardType.installment} count={1} cardContentSize={CardContentSize.big} />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <InsurersPie />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

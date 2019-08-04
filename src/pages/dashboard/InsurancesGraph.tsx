@@ -28,10 +28,10 @@ import { ArrayHelpers } from '../../common/helpers/Helpers';
     render() {
 
         return <div className="row">
-            <div className="col-10">
+            <div className="col-9">
 
             </div>
-            <div className="col-2">
+            <div className="col-3">
                 <select className="form-control" onChange={this.handleSelectedYearChange} value={this.selectedYear}>
                     {
                         this.years && this.years.length > 0

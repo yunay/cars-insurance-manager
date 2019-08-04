@@ -72,3 +72,7 @@
     content: "*";
     color: red;
 }
+
+.zoom:hover{
+    transform:scale(1.2);
+}

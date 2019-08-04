@@ -3,6 +3,7 @@ import { Customer } from '../models/customers/Customer'
 import { Insurance } from '../models/insurances/Insurance';
 import { Insurer } from '../models/insurers/Insurer';
 import { Statement, StatementType } from '../models/common/Statement';
+import { Settings } from '../models/common/Settings';
 
 export enum DbResponseType {
     withError = 1,
@@ -24,13 +25,15 @@ var db = {
     customers: new Datastore({ filename: './src/data/customers.db' }),
     insurances: new Datastore({ filename: './src/data/insurances.db' }),
     insurers: new Datastore({ filename: './src/data/insurers.db' }),
-    statements: new Datastore({ filename: './src/data/statements.db' })
+    statements: new Datastore({ filename: './src/data/statements.db' }),
+    settings: new Datastore({ filename: './src/data/settings.db' })
 };
 
 db.customers.loadDatabase();
 db.insurances.loadDatabase();
 db.insurers.loadDatabase();
 db.statements.loadDatabase();
+db.settings.loadDatabase();
 
 export const DbContext = {
 
@@ -54,7 +57,7 @@ export const DbContext = {
     updateCustomer: (customerId: string, customer: Customer): Promise<DataResult> => {
 
         return new Promise((resolve) => {
-            db.customers.update({ id: customerId }, customer, { multi: true }, (err, doc) => {
+            db.customers.update({ id: customerId }, customer, { multi: true }, (err) => {
                 if (err)
                     console.error(err);
                 else
@@ -87,7 +90,7 @@ export const DbContext = {
     updateInsurance: (insurance: Insurance): Promise<DataResult> => {
 
         return new Promise((resolve) => {
-            db.insurances.update({ id: insurance.id }, insurance, { multi: true }, (err, doc) => {
+            db.insurances.update({ id: insurance.id }, insurance, { multi: true }, (err) => {
                 if (err)
                     console.error(err);
                 else
@@ -122,7 +125,7 @@ export const DbContext = {
     updateInsurer: (insurerId: string, insurer: Insurer): Promise<DataResult> => {
 
         return new Promise((resolve) => {
-            db.insurers.update({ id: insurerId }, insurer, { multi: true }, (err, doc) => {
+            db.insurers.update({ id: insurerId }, insurer, { multi: true }, (err) => {
                 if (err)
                     console.error(err);
                 else
@@ -153,5 +156,31 @@ export const DbContext = {
 
     removeStatementById: (statementId: string) => {
         db.statements.remove({ id: statementId })
+    },
+
+    getSettings: (query?: any) => query ? db.settings.find(query) : db.settings.find({}),
+
+    addSettings: (settings: Settings): Promise<DataResult> => {
+
+        return new Promise((resolve) => {
+            db.settings.insert(settings, (err, doc) => {
+                if (err)
+                    console.error(err);
+                else
+                    resolve(new DataResult(DbResponseType.success, doc));
+            });
+        })
+    },
+
+    updateSettings: (query:any, updateQuery:any): Promise<DataResult> => {
+
+        return new Promise((resolve) => {
+            db.settings.update(query, updateQuery, { upsert: true }, (err) => {
+                if (err)
+                    console.error(err);
+                else
+                    resolve(new DataResult(DbResponseType.success, null));
+            })
+        })
     },
 }

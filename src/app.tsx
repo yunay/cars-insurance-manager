@@ -15,34 +15,60 @@ import * as moment from 'moment';
 import { Statements } from './pages/settings/statements/Statements';
 import { InsuranceInfo } from './pages/insurances/InsuranceInfo';
 import { UpdateInsurance } from './pages/insurances/UpdateInsurance';
+import { CommonSettings } from './pages/settings/common/Settings';
+import { DbContext } from './data/DataStore';
+import { Settings } from './models/common/Settings';
+import { observer } from 'mobx-react';
+import { observable } from 'mobx';
 
-export class App extends React.Component<any, any> {
+@observer export class App extends React.Component<any, any> {
 
-  constructor(props: any) {
-    super(props);
+    @observable resourcesLoaded: boolean = false;
 
-    this.initConfigs();
-  }
+    constructor(props: any) {
+        super(props);
 
-  render() {
-    return (<Layout>
-      <Route exact path='/' component={Dashboard} />
-      <Route path='/customers' component={Customers} />
-      <Route path='/add-customer' component={AddCustomer} />
-      <Route exact path='/insurances' component={Insurances} />
-      <Route exact path='/add-insurance' component={AddInsurance} />
-      <Route exact path='/insurance-info/:insuranceId' component={InsuranceInfo} />
-      <Route exact path='/update-insurance/:insuranceId' component={UpdateInsurance} />
-      <Route exact path='/insurers' component={Insurers} />
-      <Route exact path='/add-insurer' component={AddInsurer} />
-      <Route exact path='/update-insurer/:insurerId' component={UpdateInsurer} />
-      <Route exact path='/update-customer/:customerId' component={UpdateCustomer} />
-      <Route exact path='/customer-info/:customerId' component={CustomerInfo} />
-      <Route exact path='/statements' component={Statements} />
-    </Layout>);
-  }
+        this.initConfigs();
+    }
 
-  initConfigs() {
-    moment.locale('bg');
-  }
+    render() {
+
+        if (this.resourcesLoaded) {
+            return (<Layout>
+                <Route exact path='/' component={Dashboard} />
+                <Route path='/customers' component={Customers} />
+                <Route path='/add-customer' component={AddCustomer} />
+                <Route exact path='/insurances' component={Insurances} />
+                <Route exact path='/add-insurance' component={AddInsurance} />
+                <Route exact path='/insurance-info/:insuranceId' component={InsuranceInfo} />
+                <Route exact path='/update-insurance/:insuranceId' component={UpdateInsurance} />
+                <Route exact path='/insurers' component={Insurers} />
+                <Route exact path='/add-insurer' component={AddInsurer} />
+                <Route exact path='/update-insurer/:insurerId' component={UpdateInsurer} />
+                <Route exact path='/update-customer/:customerId' component={UpdateCustomer} />
+                <Route exact path='/customer-info/:customerId' component={CustomerInfo} />
+                <Route exact path='/statements' component={Statements} />
+                <Route exact path='/common-settings' component={CommonSettings} />
+            </Layout>);
+        }
+
+        return null;
+    }
+
+    initConfigs() {
+        moment.locale('bg');
+        this.initSettings();
+    }
+
+    initSettings() {
+        DbContext.getSettings().exec((err, doc) => {
+            if (err || doc.length == 0) {
+                let initialSettings = new Settings();
+                initialSettings.daysBeforeInstallmentExpire = 7;
+
+                DbContext.addSettings(initialSettings).then(() => this.resourcesLoaded = true).catch(() => this.resourcesLoaded = true);
+            } else 
+                this.resourcesLoaded = true;
+        })
+    }
 }

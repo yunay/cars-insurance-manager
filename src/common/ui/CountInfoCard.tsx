@@ -1,14 +1,20 @@
 import { BaseComponent } from "./BaseComponent";
 import React = require('react');
 
+export enum CardContentSize {
+    small, big
+}
+
 export enum CountInfoCardType{
-    customer, insurance, insurer, vehicle
+    customer, insurance, insurer, vehicle, installment
 }
 
 interface CountInfoCardProps{
     text:string;
     count:number;
     type:CountInfoCardType;
+    cardContentSize?: CardContentSize;
+    hyperlink?: string;
 }
 
 export class CountInfoCard extends BaseComponent<CountInfoCardProps> {
@@ -17,11 +23,13 @@ export class CountInfoCard extends BaseComponent<CountInfoCardProps> {
             <div className="card-body">
                 <div className="row no-gutters align-items-center">
                     <div className="col mr-2">
-                        <div className={`text-xs font-weight-bold text-${this.getTheme()} text-uppercase mb-1`}>{this.props.text}</div>
+                        <div className={`${this.props.cardContentSize == CardContentSize.big ? 'text-md' : 'text-xs'} font-weight-bold text-${this.getTheme()} text-uppercase mb-1`}>{this.props.text}</div>
                         <div className="h5 mb-0 font-weight-bold text-gray-800">{this.props.count}</div>
                     </div>
                     <div className="col-auto">
-                        <i className={`${this.getIcon()} fa-2x text-${this.getTheme()}`}></i>
+                        <a href="javascript:;">
+                            <i className={`${this.getIcon()} ${this.props.cardContentSize == CardContentSize.big ? 'fa-3x' : 'fa-2x'} text-${this.getTheme()} zoom`}></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -34,6 +42,7 @@ export class CountInfoCard extends BaseComponent<CountInfoCardProps> {
             case CountInfoCardType.insurance: return "success";
             case CountInfoCardType.insurer: return "danger";
             case CountInfoCardType.vehicle: return "info";
+            case CountInfoCardType.installment: return "warning";
         }
     }
 
@@ -43,6 +52,7 @@ export class CountInfoCard extends BaseComponent<CountInfoCardProps> {
             case CountInfoCardType.insurance: return "fas fa-shield-alt";
             case CountInfoCardType.insurer: return "fas fa-user-shield";
             case CountInfoCardType.vehicle: return "fas fa-car";
+            case CountInfoCardType.installment: return "fas fa-money-check-alt";
         }
     }
 }

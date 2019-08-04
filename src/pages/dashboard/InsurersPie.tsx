@@ -26,14 +26,7 @@ import React = require('react');
 
     render() {
         if (this.dataInitialized) {
-            return <div className="row">
-                <div className="col-10">
-
-                </div>
-                <div className="col-2">
-                </div>
-                <PieGraph data={this.numberOfInsurancesByInsurer} label="Брой застраховки на застраховател" labels={this.labels} datasetColor="red" />
-            </div>
+            return <PieGraph data={this.numberOfInsurancesByInsurer} label="Брой застраховки на застраховател" labels={this.labels} datasetColor="red" />
         }
 
         return null;
