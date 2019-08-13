@@ -12,6 +12,7 @@ export class Customer {
         this.statement = statement;
         this.statementId = statementId;
         this.carRegistrationNumbers = carRegistrationNumbers;
+        this.isActive = true;
     }
 
     @observable public id: string;
@@ -29,4 +30,6 @@ export class Customer {
     @observable public statementId: string;
 
     @observable public carRegistrationNumbers: string[];
+
+    @observable public isActive: boolean;
 }

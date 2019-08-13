@@ -12,6 +12,7 @@ export class Statement {
         this.name = name;
         this.statementWithType = statementWithType;
         this.statementType = statementType;
+        this.isActive = true;
     }
 
     @observable public id: string;
@@ -21,4 +22,6 @@ export class Statement {
     @observable public statementWithType: string;
 
     @observable public statementType: StatementType
+
+    @observable public isActive: boolean;
 }

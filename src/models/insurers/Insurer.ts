@@ -6,9 +6,12 @@ export class Insurer {
 
         this.id = id;
         this.name = name;
+        this.isActive = true;
     }
 
     @observable public id: string;
 
     @observable public name: string;
+
+    @observable public isActive: boolean;
 }

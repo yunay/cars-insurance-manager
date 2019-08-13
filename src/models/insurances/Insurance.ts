@@ -7,11 +7,14 @@ export class Installment{
     constructor(value:number = 0, date = moment().toDate()){
         this.value = value;
         this.date = date;
+        this.isPaid = false;
     }
 
     @observable public value: number;
 
     @observable public date: Date;
+
+    @observable public isPaid: boolean;
 }
 
 export class Insurance {
@@ -25,6 +28,7 @@ export class Insurance {
         this.note = note;
         this.installments = installments;
         this.carRegNumber = carRegNumber;
+        this.isActive = true;
     }
 
     @observable public id: string;
@@ -40,4 +44,6 @@ export class Insurance {
     @observable public installments: Installment[];
 
     @observable public carRegNumber: string;
+
+    @observable public isActive: boolean;
 }
