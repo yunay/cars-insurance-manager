@@ -1,13 +1,12 @@
+import { action, observable, runInAction } from 'mobx';
+import { observer } from 'mobx-react';
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
-import { observer } from 'mobx-react';
-import { observable, runInAction, action } from 'mobx';
-import { DbContext } from '../../data/DataStore';
-import { Insurer } from '../../models/insurers/Insurer';
-import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
-import { confirmAlert } from 'react-confirm-alert';
-import { PageNavigation } from '../../common/ui/PageNavigation';
 import { Constants } from '../../common/Constants';
+import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
+import { PageNavigation } from '../../common/ui/PageNavigation';
+import { DbContext, DbResponseType } from '../../data/DataStore';
+import { Insurer } from '../../models/insurers/Insurer';
 
 @observer export class Insurers extends React.Component<any, any> {
 
@@ -74,7 +73,9 @@ import { Constants } from '../../common/Constants';
                                                                     <NavLink to={`/update-insurer/${insurer.id}`} className="btn btn-success btn-circle btn-sm">
                                                                         <i className="fas fa-edit"></i>
                                                                     </NavLink>
-                                                                    <a href="javascript:;" className="btn btn-danger btn-circle btn-sm" onClick={this.removeInsurer.bind(this, insurer.id)}><i className="fas fa-trash"></i></a>
+                                                                    <a href="javascript:;" title={insurer.isActive ? "деактивирай" : "активирай"} className={`btn btn-circle btn-sm ${insurer.isActive ? 'btn-danger' : 'btn-info'}`} onClick={this.toggleInsurerActivity.bind(this, insurer)}>
+                                                                        <i className={`fas fa-${insurer.isActive ? 'square' : 'check-square'}`}></i>
+                                                                    </a>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -92,23 +93,14 @@ import { Constants } from '../../common/Constants';
         </div>
     }
 
-    removeInsurer(insurerId: string) {
-        confirmAlert({
-            message: 'Сигурен ли сте, че искате да изтриете записа?',
-            buttons: [
-                {
-                    label: 'Да',
-                    onClick: () => {
-                        DbContext.removeInsurerById(insurerId);
-                        this.loadInsurers();
-                    }
-                },
-                {
-                    label: 'Не',
-                    onClick: () => { }
-                }
-            ]
-        });
+    toggleInsurerActivity(insurer: Insurer) {
+        insurer.isActive = !insurer.isActive;
+
+        DbContext.updateInsurer(insurer).then((response) => {
+
+            if (response.reponseType == DbResponseType.withError)
+                console.log('Грешка при промяна на статуса на застрахователя')
+        })
     }
 
     loadInsurers(query?: any) {
@@ -131,6 +123,9 @@ import { Constants } from '../../common/Constants';
 
     getInsurersCount(query?: any) {
         DbContext.getInsurersPagesCount(query).exec((err, count) => {
+            if (err)
+                console.log(err)
+
             runInAction.bind(this)(() => {
                 this.totalItemsCount = count;
             })

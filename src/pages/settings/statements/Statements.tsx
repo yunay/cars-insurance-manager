@@ -80,7 +80,7 @@ import { StatementsResults } from './StatementsResults';
     }
 
     removeStatement(statementId:string){
-        DbContext.removeStatementById(statementId);
+        DbContext.toggleActivityStatementById(statementId);
         this.loadStatements();
     }
 

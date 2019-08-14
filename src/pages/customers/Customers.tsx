@@ -1,13 +1,12 @@
+import { action, observable, runInAction } from 'mobx';
+import { observer } from 'mobx-react';
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
-import { observer } from 'mobx-react';
-import { observable, runInAction, action } from 'mobx';
-import { Customer } from '../../models/customers/Customer';
-import { DbContext } from '../../data/DataStore';
-import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
-import { confirmAlert } from 'react-confirm-alert';
-import { PageNavigation } from '../../common/ui/PageNavigation';
 import { Constants } from '../../common/Constants';
+import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
+import { PageNavigation } from '../../common/ui/PageNavigation';
+import { DbContext, DbResponseType } from '../../data/DataStore';
+import { Customer } from '../../models/customers/Customer';
 
 @observer export class Customers extends React.Component<any, any> {
 
@@ -87,7 +86,9 @@ import { Constants } from '../../common/Constants';
                                                                     <NavLink to={`/update-customer/${customer.id}`} className="btn btn-success btn-circle btn-sm">
                                                                         <i className="fas fa-edit"></i>
                                                                     </NavLink>
-                                                                    <a href="javascript:;" className="btn btn-danger btn-circle btn-sm" onClick={this.removeCustomer.bind(this, customer.id)}><i className="fas fa-trash"></i></a>
+                                                                    <a href="javascript:;" title={customer.isActive ? "деактивирай" : "активирай"} className={`btn btn-circle btn-sm ${customer.isActive ? 'btn-danger' : 'btn-info'}`} onClick={this.toggleCustomerActivity.bind(this, customer)}>
+                                                                        <i className={`fas fa-${customer.isActive ? 'square' : 'check-square'}`}></i>
+                                                                    </a>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -105,24 +106,14 @@ import { Constants } from '../../common/Constants';
         </div>
     }
 
-    removeCustomer(customerId: string) {
+    toggleCustomerActivity(customer: Customer) {
+        customer.isActive = !customer.isActive;
 
-        confirmAlert({
-            message: 'Сигурен ли сте, че искате да изтриете записа?',
-            buttons: [
-                {
-                    label: 'Да',
-                    onClick: () => {
-                        DbContext.removeCustomerById(customerId);
-                        this.loadCustomers();
-                    }
-                },
-                {
-                    label: 'Не',
-                    onClick: () => { }
-                }
-            ]
-        });
+        DbContext.updateCustomer(customer).then((response) => {
+
+            if (response.reponseType == DbResponseType.withError)
+                console.log('Грешка при промяна на статуса на клиента')
+        })
     }
 
     loadCustomers(query?: any) {
@@ -144,6 +135,10 @@ import { Constants } from '../../common/Constants';
 
     getCustomersCount(query?: any) {
         DbContext.getCustomersPagesCount(query).exec((err, count) => {
+
+            if (err)
+                console.log('Грешка при вземане на броя на клиентите.')
+
             runInAction.bind(this)(() => {
                 this.totalItemsCount = count;
             })

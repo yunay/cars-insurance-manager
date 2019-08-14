@@ -153,7 +153,7 @@ import { CustomerValidation } from '../../models/Validations';
     updateCustomer() {
 
         if (this.validator.validate(this.model)) {
-            DbContext.updateCustomer(this.props.match.params.customerId, this.model).then((response) => {
+            DbContext.updateCustomer(this.model).then((response) => {
 
                 let notificationKey = `${+new Date()}_notificationKey`
                 if (response.reponseType == DbResponseType.success)

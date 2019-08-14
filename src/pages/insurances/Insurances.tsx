@@ -1,15 +1,14 @@
-import * as React from 'react';
+import { action, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
-import { BaseComponent } from '../../common/ui/BaseComponent';
-import { observable, runInAction, action } from 'mobx';
-import { Insurance } from '../../models/insurances/Insurance';
-import { DbContext } from '../../data/DataStore';
-import { Constants } from '../../common/Constants';
-import { confirmAlert } from 'react-confirm-alert';
+import * as React from 'react';
 import { NavLink } from 'react-router-dom';
-import { PageNavigation } from '../../common/ui/PageNavigation';
+import { Constants } from '../../common/Constants';
+import { BaseComponent } from '../../common/ui/BaseComponent';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
+import { PageNavigation } from '../../common/ui/PageNavigation';
+import { DbContext, DbResponseType } from '../../data/DataStore';
 import { Customer } from '../../models/customers/Customer';
+import { Insurance } from '../../models/insurances/Insurance';
 
 @observer export class Insurances extends BaseComponent<any> {
 
@@ -88,7 +87,9 @@ import { Customer } from '../../models/customers/Customer';
                                                                     <NavLink to={`/update-insurance/${insurance.id}`} className="btn btn-success btn-circle btn-sm">
                                                                         <i className="fas fa-edit"></i>
                                                                     </NavLink>
-                                                                    <a href="javascript:;" className="btn btn-danger btn-circle btn-sm" onClick={this.removeInsurance.bind(this, insurance.id)}><i className="fas fa-trash"></i></a>
+                                                                    <a href="javascript:;" title={insurance.isActive ? "деактивирай" : "активирай"} className={`btn btn-circle btn-sm ${insurance.isActive ? 'btn-danger' : 'btn-info'}`} onClick={this.toggleInsuranceActivity.bind(this, insurance)}>
+                                                                        <i className={`fas fa-${insurance.isActive ? 'square' : 'check-square'}`}></i>
+                                                                    </a>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -106,24 +107,14 @@ import { Customer } from '../../models/customers/Customer';
         </div>
     }
 
-    removeInsurance(insuranceId: string) {
+    toggleInsuranceActivity(insurance: Insurance) {
+        insurance.isActive = !insurance.isActive;
 
-        confirmAlert({
-            message: 'Сигурен ли сте, че искате да изтриете записа?',
-            buttons: [
-                {
-                    label: 'Да',
-                    onClick: () => {
-                        DbContext.removeInsuranceById(insuranceId);
-                        this.loadInsurances();
-                    }
-                },
-                {
-                    label: 'Не',
-                    onClick: () => { }
-                }
-            ]
-        });
+        DbContext.updateInsurance(insurance).then((response) => {
+
+            if (response.reponseType == DbResponseType.withError)
+                console.log('Грешка при промяна на статуса на застраховката')
+        })
     }
 
     loadInsurances(query?: any) {
@@ -163,6 +154,9 @@ import { Customer } from '../../models/customers/Customer';
 
     getInsurancesCount(query?: any) {
         DbContext.getInsurancesPagesCount(query).exec((err, count) => {
+            if (err)
+                console.log(err)
+
             runInAction.bind(this)(() => {
                 this.totalItemsCount = count;
             })
@@ -189,6 +183,9 @@ import { Customer } from '../../models/customers/Customer';
         let customerName = "";
 
         DbContext.getCustomers({ id: customerId }).exec((err: any, customer: Customer[]) => {
+            if (err)
+                console.log(err);
+
             customerName = customer[0].firstname
         })
 
