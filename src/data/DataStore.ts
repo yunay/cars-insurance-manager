@@ -128,6 +128,8 @@ export const DbContext = {
 
     getStatements: (query?: any) => query ? db.statements.find(query) : db.statements.find({}),
 
+    getStatementsPagesCount: (query?: any) => query ? db.statements.count(query) : db.statements.count({}),
+
     addStatement: (statement: Statement): Promise<DataResult> => {
         statement.id = `${+new Date}_statement`;
         statement.statementWithType = `${statement.statementType == StatementType.city ? 'г.' : 'с.'} ${statement.name}`
@@ -142,8 +144,16 @@ export const DbContext = {
         })
     },
 
-    toggleActivityStatementById: (statementId: string) => {
-        db.statements.remove({ id: statementId })
+    updateStatement: (statement: Statement): Promise<DataResult> => {
+
+        return new Promise((resolve) => {
+            db.statements.update({ id: statement.id }, statement, { multi: true }, (err) => {
+                if (err)
+                    console.error(err);
+                else
+                    resolve(new DataResult(DbResponseType.success, null));
+            })
+        })
     },
 
     getSettings: (query?: any) => query ? db.settings.find(query) : db.settings.find({}),

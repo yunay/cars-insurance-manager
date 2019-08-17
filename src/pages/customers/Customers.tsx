@@ -86,8 +86,8 @@ import { Customer } from '../../models/customers/Customer';
                                                                     <NavLink to={`/update-customer/${customer.id}`} className="btn btn-success btn-circle btn-sm">
                                                                         <i className="fas fa-edit"></i>
                                                                     </NavLink>
-                                                                    <a href="javascript:;" title={customer.isActive ? "деактивирай" : "активирай"} className={`btn btn-circle btn-sm ${customer.isActive ? 'btn-danger' : 'btn-info'}`} onClick={this.toggleCustomerActivity.bind(this, customer)}>
-                                                                        <i className={`fas fa-${customer.isActive ? 'square' : 'check-square'}`}></i>
+                                                                    <a href="javascript:;" title={customer.isActive ? "деактивирай" : "активирай"} onClick={this.toggleCustomerActivity.bind(this, customer)}>
+                                                                        <span className={`text-xs font-weight-bold ${customer.isActive ? "text-danger" : "text-success"}`}>{customer.isActive ? "ДЕАКТИВИРАЙ" : "АКТИВИРАЙ"}</span>
                                                                     </a>
                                                                 </div>
                                                             </td>

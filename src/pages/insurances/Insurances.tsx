@@ -64,11 +64,11 @@ import { Insurance } from '../../models/insurances/Insurance';
                                         ? <table className="table table-bordered dataTable" id="dataTable" style={{ width: "100%" }}>
                                             <thead>
                                                 <tr role="row">
-                                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "210px" }}>Клиент</th>
+                                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "310px" }}>Клиент</th>
                                                     <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "140px" }}>Регистрационен №</th>
                                                     <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "150px" }}>Дата на създаване</th>
                                                     <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "110px" }}>Брой вноски</th>
-                                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "160px" }}>Действия</th>
+                                                    <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "100px" }}>Действия</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -87,8 +87,8 @@ import { Insurance } from '../../models/insurances/Insurance';
                                                                     <NavLink to={`/update-insurance/${insurance.id}`} className="btn btn-success btn-circle btn-sm">
                                                                         <i className="fas fa-edit"></i>
                                                                     </NavLink>
-                                                                    <a href="javascript:;" title={insurance.isActive ? "деактивирай" : "активирай"} className={`btn btn-circle btn-sm ${insurance.isActive ? 'btn-danger' : 'btn-info'}`} onClick={this.toggleInsuranceActivity.bind(this, insurance)}>
-                                                                        <i className={`fas fa-${insurance.isActive ? 'square' : 'check-square'}`}></i>
+                                                                    <a href="javascript:;" title={insurance.isActive ? "деактивирай" : "активирай"} onClick={this.toggleInsuranceActivity.bind(this, insurance)}>
+                                                                        <span className={`text-xs font-weight-bold ${insurance.isActive ? "text-danger" : "text-success"}`}>{insurance.isActive ? "ДЕАКТИВИРАЙ" : "АКТИВИРАЙ"}</span>
                                                                     </a>
                                                                 </div>
                                                             </td>

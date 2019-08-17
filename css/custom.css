@@ -76,3 +76,12 @@
 .zoom:hover{
     transform:scale(1.2);
 }
+
+.td-input-wrapper{
+    padding:0 !important;
+}
+
+.td-input {
+    height: 50px;
+    border: 0;
+}

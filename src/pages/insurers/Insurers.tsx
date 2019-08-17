@@ -73,8 +73,8 @@ import { Insurer } from '../../models/insurers/Insurer';
                                                                     <NavLink to={`/update-insurer/${insurer.id}`} className="btn btn-success btn-circle btn-sm">
                                                                         <i className="fas fa-edit"></i>
                                                                     </NavLink>
-                                                                    <a href="javascript:;" title={insurer.isActive ? "деактивирай" : "активирай"} className={`btn btn-circle btn-sm ${insurer.isActive ? 'btn-danger' : 'btn-info'}`} onClick={this.toggleInsurerActivity.bind(this, insurer)}>
-                                                                        <i className={`fas fa-${insurer.isActive ? 'square' : 'check-square'}`}></i>
+                                                                    <a href="javascript:;" title={insurer.isActive ? "деактивирай" : "активирай"} onClick={this.toggleInsurerActivity.bind(this, insurer)}>
+                                                                        <span className={`text-xs font-weight-bold ${insurer.isActive ? "text-danger" : "text-success"}`}>{insurer.isActive ? "ДЕАКТИВИРАЙ" : "АКТИВИРАЙ"}</span>
                                                                     </a>
                                                                 </div>
                                                             </td>
