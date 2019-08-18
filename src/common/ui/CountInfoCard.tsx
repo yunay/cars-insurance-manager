@@ -1,5 +1,6 @@
 import { BaseComponent } from "./BaseComponent";
 import React = require('react');
+import { NavLink } from 'react-router-dom';
 
 export enum CardContentSize {
     small, big
@@ -27,9 +28,9 @@ export class CountInfoCard extends BaseComponent<CountInfoCardProps> {
                         <div className="h5 mb-0 font-weight-bold text-gray-800">{this.props.count}</div>
                     </div>
                     <div className="col-auto">
-                        <a href="javascript:;">
+                        <NavLink to={`/installments/${"expiring"}`}>
                             <i className={`${this.getIcon()} ${this.props.cardContentSize == CardContentSize.big ? 'fa-3x' : 'fa-2x'} text-${this.getTheme()} zoom`}></i>
-                        </a>
+                        </NavLink>
                     </div>
                 </div>
             </div>

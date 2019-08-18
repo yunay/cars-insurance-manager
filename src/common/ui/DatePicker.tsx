@@ -18,7 +18,7 @@ export class DatePicker extends React.Component<DatePickerProps, any>{
     render() {
         return <>
             <div className="input-group mb-2">
-                <Datetime closeOnSelect={true} locale="bg" timeFormat={false} disableOnClickOutside={true} onChange={this.handleChange} value={this.props.value} />
+                <Datetime inputProps={{ style: { width:'105px' } }} closeOnSelect={true} locale="bg" timeFormat={false} disableOnClickOutside={true} onChange={this.handleChange} value={this.props.value} />
                 <div className="input-group-append">
                     <button disabled={true} className="btn btn-outline-primary" type="button"><i className="far fa-calendar-alt"></i></button>
                 </div>

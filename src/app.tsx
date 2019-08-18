@@ -20,6 +20,7 @@ import { DbContext } from './data/DataStore';
 import { Settings } from './models/common/Settings';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
+import { InstallmentsUI } from './pages/insurances/Installments';
 
 @observer export class App extends React.Component<any, any> {
 
@@ -49,6 +50,7 @@ import { observable } from 'mobx';
                 <Route exact path='/customer-info/:customerId' component={CustomerInfo} />
                 <Route exact path='/statements' component={Statements} />
                 <Route exact path='/common-settings' component={CommonSettings} />
+                <Route exact path='/installments/:allOrOnlyExpiring' component={InstallmentsUI} />
             </Layout>);
         }
 

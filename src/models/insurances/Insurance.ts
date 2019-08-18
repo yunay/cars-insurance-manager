@@ -4,11 +4,14 @@ import * as moment from 'moment';
 /**Вноски */
 export class Installment{
 
-    constructor(value:number = 0, date = moment().toDate()){
+    constructor(id: string = "", value: number = 0, date = moment().toDate()) {
+        this.id = id;
         this.value = value;
         this.date = date;
         this.isPaid = false;
     }
+
+    @observable public id: string;
 
     @observable public value: number;
 

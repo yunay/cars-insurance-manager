@@ -177,7 +177,7 @@ import { DateHelpers } from '../../common/helpers/Helpers';
     }
 
     handleDateChange(date: any) {
-        this.currentInstallment.date = DateHelpers.getDate(date);
+        this.currentInstallment.date = DateHelpers.getDate(date,"end");
     }
 
     handleCreatedOnChange(date: any) {
@@ -203,6 +203,7 @@ import { DateHelpers } from '../../common/helpers/Helpers';
 
     @action addInstallment() {
         if (this.currentInstallment && this.currentInstallment.value && this.currentInstallment.date) {
+            this.currentInstallment.id = `${+new Date}_installment`
             this.model.installments.push(this.currentInstallment);
             this.currentInstallment = new Installment();
         }

@@ -1,24 +1,28 @@
-import * as React from 'react';
-import { CountInfoCard, CountInfoCardType, CardContentSize } from '../../common/ui/CountInfoCard';
-import { BaseComponent } from '../../common/ui/BaseComponent';
+import { action, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
-import { observable, runInAction } from 'mobx';
-import { Customer } from '../../models/customers/Customer';
-import { Insurer } from '../../models/insurers/Insurer';
-import { Insurance } from '../../models/insurances/Insurance';
-import { DbContext } from '../../data/DataStore';
+import * as moment from 'moment';
+import * as React from 'react';
 import { ArrayHelpers } from '../../common/helpers/Helpers';
+import { BaseComponent } from '../../common/ui/BaseComponent';
+import { CardContentSize, CountInfoCard, CountInfoCardType } from '../../common/ui/CountInfoCard';
+import { DbContext } from '../../data/DataStore';
+import { Settings } from '../../models/common/Settings';
+import { Customer } from '../../models/customers/Customer';
+import { Installment, Insurance } from '../../models/insurances/Insurance';
+import { Insurer } from '../../models/insurers/Insurer';
 import { InsurancesGraph } from './InsurancesGraph';
 import { InsurersPie } from './InsurersPie';
 
 @observer export class Dashboard extends BaseComponent<any> {
 
     @observable customers: Customer[];
+    @observable settings: Settings
     @observable insurers: Insurer[];
     @observable insurances: Insurance[];
     @observable vehicleCount: number;
     @observable insurancesDates: string[];
     @observable insurancesCountPerDate: number[];
+    @observable expiringInstallmentsCount: number;
 
     componentDidMount() {
         this.initData();
@@ -51,7 +55,7 @@ import { InsurersPie } from './InsurersPie';
                     <div className="col-5">
                         <div className="form-row">
                             <div className="form-group col-12">
-                                <CountInfoCard text={"Брой изтичащи услуги"} type={CountInfoCardType.installment} count={1} cardContentSize={CardContentSize.big} />
+                                <CountInfoCard text={"Брой изтичащи услуги"} type={CountInfoCardType.installment} count={this.expiringInstallmentsCount} cardContentSize={CardContentSize.big} />
                             </div>
                         </div>
                         <div className="row">
@@ -66,9 +70,11 @@ import { InsurersPie } from './InsurersPie';
     }
 
     initData() {
-        this.loadInsurers();
-        this.loadInsurances();
-        this.loadCustomers();
+        this.loadSettings().then(() => {
+            this.loadInsurers();
+            this.loadInsurances();
+            this.loadCustomers();
+        })
     }
 
     loadCustomers() {
@@ -89,6 +95,21 @@ import { InsurersPie } from './InsurersPie';
         })
     }
 
+    loadSettings(): Promise<void> {
+
+        return new Promise((resolve,reject) => {
+            DbContext.getSettings().exec((err, doc) => {
+                if (err) {
+                    console.log(err);
+                    reject();
+                } else {
+                    this.settings = (doc[0] as Settings);
+                    resolve();
+                }
+            })
+        })
+    }
+
     loadInsurers() {
         DbContext.getInsurers().exec((err, doc) => {
             if (err) {
@@ -106,17 +127,23 @@ import { InsurersPie } from './InsurersPie';
         })
     }
 
-    loadInsurances() {
+    @action loadInsurances() {
         DbContext.getInsurances().exec((err, doc) => {
             if (err) {
 
             } else {
                 var dataArr = Object.keys(doc);
                 this.insurances = [];
+                this.expiringInstallmentsCount = 0;
 
                 runInAction.bind(this)(() => {
                     for (let index = 0; index < dataArr.length; index++) {
-                        this.insurances.push(doc[dataArr[index]]);
+                        var currentInsurance: Insurance = doc[dataArr[index]];
+                        this.insurances.push(currentInsurance);
+
+                        this.expiringInstallmentsCount += currentInsurance.installments.filter((installment: Installment) => {
+                            return installment.date >= moment().endOf("day").add(-this.settings.daysBeforeInstallmentExpire, "days").toDate();
+                        }).length;
                     }
                 })
             }

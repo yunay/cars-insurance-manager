@@ -11,6 +11,7 @@ import { Customer } from '../../models/customers/Customer';
 import { Installment, Insurance } from '../../models/insurances/Insurance';
 import { Insurer } from '../../models/insurers/Insurer';
 import { InsuranceValidation } from '../../models/Validations';
+import { DateHelpers } from '../../common/helpers/Helpers';
 
 @observer class UpdateInsuranceImpl extends BaseComponent<any>{
 
@@ -187,11 +188,11 @@ import { InsuranceValidation } from '../../models/Validations';
     }
 
     handleDateChange(date: any) {
-        this.currentInstallment.date = date;
+        this.currentInstallment.date = DateHelpers.getDate(date, "end");
     }
 
     handleCreatedOnChange(date: any) {
-        this.model.createdOn = date;
+        this.model.createdOn = DateHelpers.getDate(date);
     }
 
     handleCarNumberRegChange(e: any) {
@@ -216,6 +217,7 @@ import { InsuranceValidation } from '../../models/Validations';
 
     @action addInstallment() {
         if (this.currentInstallment && this.currentInstallment.value && this.currentInstallment.date) {
+            this.currentInstallment.id = `${+new Date}_installment`
             this.model.installments.push(this.currentInstallment);
             this.currentInstallment = new Installment();
         }
