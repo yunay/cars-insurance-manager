@@ -203,7 +203,7 @@ import { DateHelpers } from '../../common/helpers/Helpers';
 
     @action addInstallment() {
         if (this.currentInstallment && this.currentInstallment.value && this.currentInstallment.date) {
-            this.currentInstallment.id = `${+new Date}_installment`
+            this.currentInstallment.id = `${+new Date}_installment`;
             this.model.installments.push(this.currentInstallment);
             this.currentInstallment = new Installment();
         }
