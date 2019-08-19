@@ -12,6 +12,7 @@ import * as moment from 'moment';
 
 @observer class InstallmentsImpl extends BaseComponent<any> {
 
+    @observable isLoaded: boolean;
     @observable insurances: Insurance[];
     @observable settings: Settings
     @observable customers: Customer[];
@@ -21,17 +22,21 @@ import * as moment from 'moment';
     constructor(props:any) {
         super(props);
 
+        this.isLoaded = false;
         this.handleVisibilityTypeChange = this.handleVisibilityTypeChange.bind(this);
+        this.visibilityType = this.props.match.params.allOrOnlyExpiring ? this.props.match.params.allOrOnlyExpiring : "all";
     }
 
     componentDidMount() {
         this.loadSettings().then(() => {
-
             this.loadCustomers();
         })
     }
 
     render() {
+
+        if (!this.isLoaded)
+            return null
 
         return <div className="card shadow mb-4">
             <div className="card-header py-3">
@@ -39,15 +44,15 @@ import * as moment from 'moment';
                     <div className="col-9"><h4 className="m-0 font-weight-bold text-success">Вноски</h4></div>
                     <div className="col-3">
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" name="installments_visibility" id="installments_visibility_all" value="all" onChange={this.handleVisibilityTypeChange} />
+                            <input className="form-check-input" type="radio" name="installments_visibility" id="installments_visibility_all" value="all" onChange={this.handleVisibilityTypeChange} checked={this.visibilityType == "all"} />
                             <label className="form-check-label font-weight-bold text-primary" htmlFor="installments_visibility_all">ВСИЧКИ</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" name="installments_visibility" id="installments_visibility_forPaying" value="forPaying" onChange={this.handleVisibilityTypeChange} />
+                            <input className="form-check-input" type="radio" name="installments_visibility" id="installments_visibility_forPaying" value="forPaying" onChange={this.handleVisibilityTypeChange} checked={this.visibilityType == "forPaying"} />
                             <label className="form-check-label font-weight-bold text-warning" htmlFor="installments_visibility_forPaying">ЗА ПЛАЩАНЕ</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" name="installments_visibility" id="installments_visibility_expiring" value="expiring" onChange={this.handleVisibilityTypeChange} />
+                            <input className="form-check-input" type="radio" name="installments_visibility" id="installments_visibility_expiring" value="expiring" onChange={this.handleVisibilityTypeChange} checked={this.visibilityType == "expiring"} />
                             <label className="form-check-label font-weight-bold text-danger" htmlFor="installments_visibility_expiring">ИЗТИЧАЩИ</label>
                         </div>
                     </div>
@@ -73,11 +78,10 @@ import * as moment from 'moment';
                                             {
                                                 this.model.map((item, key: number) => {
 
-                                                    if (this.visibilityType == "forPaying" && item.installment.isPaid == true)
+                                                    if ((this.visibilityType == "forPaying" || this.visibilityType == "expiring") && item.installment.isPaid == true)
                                                         return null;
-                                                    else if (this.visibilityType == "expiring" && item.installment.date <= moment().add(-this.settings.daysBeforeInstallmentExpire, "days").toDate()) {
+                                                    else if (this.visibilityType == "expiring" && item.installment.date <= moment().add(-this.settings.daysBeforeInstallmentExpire, "days").toDate())
                                                         return null;
-                                                    }
 
                                                     var currentCustomers = this.customers.filter(x => x.id == item.insurance.customerId);
 
@@ -108,6 +112,7 @@ import * as moment from 'moment';
     }
 
     handleVisibilityTypeChange(e: any) {
+
         if (e.target.value == "all") {
             this.visibilityType = "all";
         } else if (e.target.value == "forPaying") {
@@ -181,12 +186,13 @@ import * as moment from 'moment';
 
                     this.model = this.model.slice().sort((x, y) => {
 
-                        if (x.installment.date < y.installment.date) {
+                        if (x.installment.date < y.installment.date)
                             return 1
-                        } else {
+                        else
                             return -1
-                        }
                     })
+
+                    this.isLoaded = true;
                 })
             }
         })
