@@ -41,8 +41,8 @@ import * as moment from 'moment';
         return <div className="card shadow mb-4">
             <div className="card-header py-3">
                 <div className="row">
-                    <div className="col-9"><h4 className="m-0 font-weight-bold text-success">Вноски</h4></div>
-                    <div className="col-3">
+                    <div className="col-7"><h4 className="m-0 font-weight-bold text-success">Вноски</h4></div>
+                    <div className="col-5">
                         <div className="form-check form-check-inline">
                             <input className="form-check-input" type="radio" name="installments_visibility" id="installments_visibility_all" value="all" onChange={this.handleVisibilityTypeChange} checked={this.visibilityType == "all"} />
                             <label className="form-check-label font-weight-bold text-primary" htmlFor="installments_visibility_all">ВСИЧКИ</label>
