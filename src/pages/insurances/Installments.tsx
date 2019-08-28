@@ -19,7 +19,7 @@ import * as moment from 'moment';
     @observable model: { installment: Installment, insurance: Insurance }[];
     @observable visibilityType: "all" | "forPaying" | "expiring";
 
-    constructor(props:any) {
+    constructor(props: any) {
         super(props);
 
         this.isLoaded = false;
@@ -67,21 +67,23 @@ import * as moment from 'moment';
                                     ? <table className="table table-bordered dataTable" id="dataTable" style={{ width: "100%" }}>
                                         <thead>
                                             <tr role="row">
-                                                <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "310px" }}>Клиент</th>
-                                                <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "140px" }}>Изтича на</th>
+                                                <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "200px" }}>Клиент</th>
+                                                <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "120px" }}>Изтича на</th>
                                                 <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "150px" }}>Сума за плащане</th>
                                                 <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "110px" }}>Статус</th>
-                                                <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "100px" }}>Действия</th>
+                                                <th className="sorting" rowSpan={1} colSpan={1} style={{ width: "140px" }}>Действия</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {
                                                 this.model.map((item, key: number) => {
 
-                                                    if ((this.visibilityType == "forPaying" || this.visibilityType == "expiring") && item.installment.isPaid == true)
+                                                    if (this.visibilityType == "forPaying" && item.installment.isPaid == true) {
                                                         return null;
-                                                    else if (this.visibilityType == "expiring" && item.installment.date <= moment().add(-this.settings.daysBeforeInstallmentExpire, "days").toDate())
+                                                    } else if (this.visibilityType == "expiring"
+                                                        && item.installment.isPaid == true || item.installment.date <= moment().endOf("day").add(-this.settings.daysBeforeInstallmentExpire, "days").toDate()) {
                                                         return null;
+                                                    }
 
                                                     var currentCustomers = this.customers.filter(x => x.id == item.insurance.customerId);
 
@@ -112,14 +114,8 @@ import * as moment from 'moment';
     }
 
     handleVisibilityTypeChange(e: any) {
-
-        if (e.target.value == "all") {
-            this.visibilityType = "all";
-        } else if (e.target.value == "forPaying") {
-            this.visibilityType = "forPaying";
-        } else if (e.target.value == "expiring") {
-            this.visibilityType = "expiring";
-        }
+        this.visibilityType = e.target.value;
+        this.forceUpdate();
     }
 
     toggleInstallmentPaidStatus(insurance: Insurance, installment: Installment) {
@@ -129,6 +125,8 @@ import * as moment from 'moment';
 
             if (response.reponseType == DbResponseType.withError)
                 console.log('Грешка при промяна на статуса на застраховката')
+
+            this.loadCustomers();
         })
     }
 
@@ -197,7 +195,7 @@ import * as moment from 'moment';
             }
         })
     }
-   
+
 }
 
 export const InstallmentsUI = withRouter(InstallmentsImpl);

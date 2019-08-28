@@ -142,7 +142,7 @@ import { InsurersPie } from './InsurersPie';
                         this.insurances.push(currentInsurance);
 
                         this.expiringInstallmentsCount += currentInsurance.installments.filter((installment: Installment) => {
-                            return installment.date >= moment().endOf("day").add(-this.settings.daysBeforeInstallmentExpire, "days").toDate();
+                            return installment.date <= moment().endOf("day").add(-this.settings.daysBeforeInstallmentExpire, "days").toDate();
                         }).length;
                     }
                 })

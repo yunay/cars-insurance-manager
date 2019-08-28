@@ -36,7 +36,7 @@ import { NotificationType, NotificationPanel } from '../../../common/ui/Notifica
                                 </div>
                                 <div>
                                     <span className="btn btn-light btn-icon-split">
-                                        <button className="btn btn-danger" onClick={this.handleDaysBeforeInstallmentExpireChange.bind(this, this.model.daysBeforeInstallmentExpire-1)}>
+                                        <button className="btn btn-danger" onClick={this.handleDaysBeforeInstallmentExpireChange.bind(this, this.model.daysBeforeInstallmentExpire - 1)}>
                                             <i className="fas fa-arrow-down"></i>
                                         </button>
                                         <span className="text">{this.model.daysBeforeInstallmentExpire}</span>
@@ -68,7 +68,7 @@ import { NotificationType, NotificationPanel } from '../../../common/ui/Notifica
             })
         } else
             this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.warning} isDismisable={true} text={'Достигната минимална стойност.'} />
-        
+
     }
 
     initSettings() {
