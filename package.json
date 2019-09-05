@@ -9,6 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
+    "win": "electron-builder -w",
     "lint": "tslint --project tsconfig.json --type-check --force"
   },
   "keywords": [],
@@ -29,8 +30,7 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "npm",
-        "icon": "images/icon.ico"
+        "packageManager": "npm"
       },
       "electronWinstallerConfig": {
         "name": "cars_insurance_manager"
@@ -43,8 +43,7 @@
       },
       "windowsStoreConfig": {
         "packageName": "",
-        "name": "carsinsurancemanager",
-        "icon": "images/icon.png"
+        "name": "carsinsurancemanager"
       }
     }
   },
@@ -60,7 +59,6 @@
     "chart.js": "2.8.0",
     "electron-compile": "6.4.4",
     "electron-devtools-installer": "2.2.4",
-    "electron-squirrel-startup": "1.0.0",
     "jquery": "3.4.1",
     "mobx": "5.9.4",
     "mobx-react": "5.4.3",
@@ -82,9 +80,23 @@
     "babel-preset-env": "1.7.0",
     "babel-preset-react": "6.24.1",
     "electron": "5.0.1",
+    "electron-builder": "21.2.0",
     "electron-forge": "5.2.4",
     "electron-prebuilt-compile": "4.0.0",
     "tslint": "5.16.0",
     "typescript": "3.4.5"
+  },
+  "build": {
+    "appId": "com.cim.app",
+    "productName": "Yuki CIM",
+    "target": "NSIS",
+    "directories": {
+      "output": "build",
+      "buildResources": "."
+    },
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    }
   }
 }

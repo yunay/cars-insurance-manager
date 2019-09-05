@@ -6,3 +6,4 @@ insurers.db
 statements.db
 settings.db
 /.vs
+/build
