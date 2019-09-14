@@ -21,15 +21,24 @@ import { Settings } from './models/common/Settings';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { InstallmentsUI } from './pages/insurances/Installments';
+import { notify } from 'node-notifier'
+
+const path = require('path')
 
 @observer export class App extends React.Component<any, any> {
 
     @observable resourcesLoaded: boolean = false;
 
+    private notificationInterval: NodeJS.Timer;
+
     constructor(props: any) {
         super(props);
 
         this.initConfigs();
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.notificationInterval);
     }
 
     render() {
@@ -63,14 +72,39 @@ import { InstallmentsUI } from './pages/insurances/Installments';
     }
 
     initSettings() {
-        DbContext.getSettings().exec((err, doc) => {
+
+        DbContext.getSettings().exec((err:any, doc:Settings[]) => {
             if (err || doc.length == 0) {
                 let initialSettings = new Settings();
                 initialSettings.daysBeforeInstallmentExpire = 7;
+                initialSettings.notificationIntervalInHours = 1;
 
-                DbContext.addSettings(initialSettings).then(() => this.resourcesLoaded = true).catch(() => this.resourcesLoaded = true);
-            } else 
+                DbContext.addSettings(initialSettings).then(() => {
+                    this.resourcesLoaded = true;
+                    this.setNotificationsOnInterval(initialSettings.notificationIntervalInHours);
+                }).catch((err) => {
+                    console.log(err);
+                    this.resourcesLoaded = true;
+                    this.setNotificationsOnInterval(initialSettings.notificationIntervalInHours);
+                });
+
+            } else {
                 this.resourcesLoaded = true;
+                this.setNotificationsOnInterval(doc[0].notificationIntervalInHours);
+            }
         })
+    }
+
+    setNotificationsOnInterval(notificationIntervalInHours:number) {
+        console.log(this);
+
+        this.notificationInterval = setInterval(() => {
+            notify({
+                title: "Title",
+                icon: path.join(__dirname, 'notify-icon.png'),
+                message: 'test',
+                sound: true,
+            });
+        }, 1000 * 60 * notificationIntervalInHours)
     }
 }

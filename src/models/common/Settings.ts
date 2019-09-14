@@ -7,4 +7,6 @@ export class Settings {
     }
 
     @observable public daysBeforeInstallmentExpire: number;
+
+    @observable public notificationIntervalInHours: number;
 }

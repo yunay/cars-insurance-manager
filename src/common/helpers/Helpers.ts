@@ -18,7 +18,7 @@ export const ArrayHelpers = {
 }
 
 export const DateHelpers = {
-    getDate: function (date: Date | Moment, startOrEndOfDay?:"start" | "end") {
+    getDate: function (date: Date | Moment, startOrEndOfDay?: "start" | "end") {
         if (isMoment(date)) {
             if (startOrEndOfDay)
                 date = startOrEndOfDay == "start" ? date.startOf("day") : date.endOf("day");

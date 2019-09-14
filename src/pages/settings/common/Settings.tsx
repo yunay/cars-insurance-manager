@@ -46,6 +46,23 @@ import { NotificationType, NotificationPanel } from '../../../common/ui/Notifica
                                     </span>
                                 </div>
                             </div>
+
+                            <div className="col">
+                                <div>
+                                    <label>Интервал на известяване за изтичащи вноси в часове.</label>
+                                </div>
+                                <div>
+                                    <span className="btn btn-light btn-icon-split">
+                                        <button className="btn btn-danger" onClick={this.handleNotificationIntervalInHoursChange.bind(this, this.model.notificationIntervalInHours - 1)}>
+                                            <i className="fas fa-arrow-down"></i>
+                                        </button>
+                                        <span className="text">{this.model.notificationIntervalInHours}</span>
+                                        <button className="btn btn-success" onClick={this.handleNotificationIntervalInHoursChange.bind(this, this.model.notificationIntervalInHours + 1)}>
+                                            <i className="fas fa-arrow-up"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -59,7 +76,7 @@ import { NotificationType, NotificationPanel } from '../../../common/ui/Notifica
         let notificationKey = `${+new Date()}_notificationKey`
 
         if (newDaysBeforeInstallmentExpire >= 1) {
-            DbContext.updateSettings({ daysBeforeInstallmentExpire: this.model.daysBeforeInstallmentExpire }, { daysBeforeInstallmentExpire: newDaysBeforeInstallmentExpire }).then((response) => {
+            DbContext.updateSettings({ daysBeforeInstallmentExpire: this.model.daysBeforeInstallmentExpire }, this.model).then((response) => {
                 if (response.reponseType == DbResponseType.success) {
                     this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно обновени настройки.'} />
                     this.model.daysBeforeInstallmentExpire = newDaysBeforeInstallmentExpire;
@@ -68,7 +85,21 @@ import { NotificationType, NotificationPanel } from '../../../common/ui/Notifica
             })
         } else
             this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.warning} isDismisable={true} text={'Достигната минимална стойност.'} />
+    }
 
+    handleNotificationIntervalInHoursChange(hours: number) {
+        let notificationKey = `${+new Date()}_notificationKey`
+
+        if (hours >= 1) {
+            DbContext.updateSettings({ notificationIntervalInHours: this.model.notificationIntervalInHours }, this.model).then((response) => {
+                if (response.reponseType == DbResponseType.success) {
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно обновени настройки. Моля, рестартирайте програмата за да влязат в сила.'} />
+                    this.model.notificationIntervalInHours = hours;
+                } else
+                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка.'} />
+            })
+        } else
+            this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.warning} isDismisable={true} text={'Достигната минимална стойност.'} />
     }
 
     initSettings() {

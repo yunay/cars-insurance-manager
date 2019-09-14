@@ -173,7 +173,7 @@ export const DbContext = {
     updateSettings: (query:any, updateQuery:any): Promise<DataResult> => {
 
         return new Promise((resolve) => {
-            db.settings.update(query, updateQuery, { upsert: true }, (err) => {
+            db.settings.update(query, updateQuery, { multi: true }, (err) => {
                 if (err)
                     console.error(err);
                 else
