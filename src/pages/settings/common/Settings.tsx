@@ -74,13 +74,13 @@ import { NotificationType, NotificationPanel } from '../../../common/ui/Notifica
 
     handleDaysBeforeInstallmentExpireChange(newDaysBeforeInstallmentExpire: number) {
         let notificationKey = `${+new Date()}_notificationKey`
+        this.model.daysBeforeInstallmentExpire = newDaysBeforeInstallmentExpire;
 
         if (newDaysBeforeInstallmentExpire >= 1) {
-            DbContext.updateSettings({ daysBeforeInstallmentExpire: this.model.daysBeforeInstallmentExpire }, this.model).then((response) => {
-                if (response.reponseType == DbResponseType.success) {
+            DbContext.updateSettings(this.model).then((response) => {
+                if (response.reponseType == DbResponseType.success)
                     this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно обновени настройки.'} />
-                    this.model.daysBeforeInstallmentExpire = newDaysBeforeInstallmentExpire;
-                } else
+                else
                     this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка.'} />
             })
         } else
@@ -89,13 +89,13 @@ import { NotificationType, NotificationPanel } from '../../../common/ui/Notifica
 
     handleNotificationIntervalInHoursChange(hours: number) {
         let notificationKey = `${+new Date()}_notificationKey`
+        this.model.notificationIntervalInHours = hours;
 
         if (hours >= 1) {
-            DbContext.updateSettings({ notificationIntervalInHours: this.model.notificationIntervalInHours }, this.model).then((response) => {
-                if (response.reponseType == DbResponseType.success) {
+            DbContext.updateSettings(this.model).then((response) => {
+                if (response.reponseType == DbResponseType.success)
                     this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно обновени настройки. Моля, рестартирайте програмата за да влязат в сила.'} />
-                    this.model.notificationIntervalInHours = hours;
-                } else
+                else
                     this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка.'} />
             })
         } else

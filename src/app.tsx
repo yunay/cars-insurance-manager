@@ -19,9 +19,10 @@ import { CommonSettings } from './pages/settings/common/Settings';
 import { DbContext } from './data/DataStore';
 import { Settings } from './models/common/Settings';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { observable, action, runInAction } from 'mobx';
 import { InstallmentsUI } from './pages/insurances/Installments';
 import { notify } from 'node-notifier'
+import { Insurance, Installment } from './models/insurances/Insurance';
 
 const path = require('path')
 
@@ -73,7 +74,7 @@ const path = require('path')
 
     initSettings() {
 
-        DbContext.getSettings().exec((err:any, doc:Settings[]) => {
+        DbContext.getSettings().exec((err: any, doc: Settings[]) => {
             if (err || doc.length == 0) {
                 let initialSettings = new Settings();
                 initialSettings.daysBeforeInstallmentExpire = 7;
@@ -81,30 +82,63 @@ const path = require('path')
 
                 DbContext.addSettings(initialSettings).then(() => {
                     this.resourcesLoaded = true;
-                    this.setNotificationsOnInterval(initialSettings.notificationIntervalInHours);
+                    this.prepareInsuranceNotifications(initialSettings.notificationIntervalInHours, initialSettings.daysBeforeInstallmentExpire);
                 }).catch((err) => {
                     console.log(err);
                     this.resourcesLoaded = true;
-                    this.setNotificationsOnInterval(initialSettings.notificationIntervalInHours);
+                    this.prepareInsuranceNotifications(initialSettings.notificationIntervalInHours, initialSettings.daysBeforeInstallmentExpire);
                 });
 
             } else {
                 this.resourcesLoaded = true;
-                this.setNotificationsOnInterval(doc[0].notificationIntervalInHours);
+                this.prepareInsuranceNotifications(doc[0].notificationIntervalInHours, doc[0].daysBeforeInstallmentExpire);
             }
         })
     }
 
-    setNotificationsOnInterval(notificationIntervalInHours:number) {
-        console.log(this);
+    setNotificationsOnInterval(notificationIntervalInHours: number, expiringInstallmentsCount: number) {
 
-        this.notificationInterval = setInterval(() => {
-            notify({
-                title: "Title",
+        if (expiringInstallmentsCount >= 1) {
+
+            let notification = {
+                title: "Изтичащи застрахователни вноски.",
                 icon: path.join(__dirname, 'notify-icon.png'),
-                message: 'test',
+                message: `Имате ${expiringInstallmentsCount} ${expiringInstallmentsCount > 1 ? 'изтичащи застрахователни вноски за плащане.' : 'изтичаща застрахователна вноска за плащане.'} `,
                 sound: true,
-            });
-        }, 1000 * 60 * notificationIntervalInHours)
+            }
+
+            setTimeout(() => {
+                notify(notification);
+            }, 100)
+
+            this.notificationInterval = setInterval(() => {
+                notify(notification);
+            }, 1000 * 60 * notificationIntervalInHours)
+        }
+    }
+
+    @action prepareInsuranceNotifications(notificationIntervalInHours: number, daysBeforeInstallmentExpire: number) {
+        DbContext.getInsurances().exec((err, doc) => {
+            if (err) {
+                console.log(err);
+            } else {
+                var dataArr = Object.keys(doc);
+                var insurances: Insurance[] = [];
+                var expiringInstallmentsCount = 0;
+
+                runInAction.bind(this)(() => {
+                    for (let index = 0; index < dataArr.length; index++) {
+                        var currentInsurance: Insurance = doc[dataArr[index]];
+
+                        insurances.push(currentInsurance);
+                        expiringInstallmentsCount += currentInsurance.installments.filter((installment: Installment) => {
+                            return installment.date <= moment().endOf("day").add(-daysBeforeInstallmentExpire, "days").toDate();
+                        }).length;
+                    }
+
+                    this.setNotificationsOnInterval(notificationIntervalInHours, expiringInstallmentsCount)
+                })
+            }
+        })
     }
 }
