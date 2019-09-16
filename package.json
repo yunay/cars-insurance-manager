@@ -90,12 +90,7 @@
   },
   "build": {
     "appId": "com.cim.app",
-    "productName": "Yuki CIM",
-    "target": "NSIS",
-    "directories": {
-      "output": "build",
-      "buildResources": "."
-    },
+    "productName": "Cars insurances manager",
     "nsis": {
       "allowToChangeInstallationDirectory": true,
       "oneClick": false

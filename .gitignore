@@ -7,3 +7,4 @@ statements.db
 settings.db
 /.vs
 /build
+/dist

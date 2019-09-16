@@ -17,8 +17,7 @@ const createWindow = async () => {
     mainWindow = new BrowserWindow({
         width: 1366,
         height: 768,
-        webPreferences: { nodeIntegration: true },
-        icon: `${__dirname}/images/icon.ico`
+        webPreferences: { nodeIntegration: true }
     });
 
     mainWindow.setMenuBarVisibility(false);
