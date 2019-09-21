@@ -23,6 +23,7 @@ import { observable, action, runInAction } from 'mobx';
 import { InstallmentsUI } from './pages/insurances/Installments';
 import { notify } from 'node-notifier'
 import { Insurance, Installment } from './models/insurances/Insurance';
+import { LoadingUI } from './common/ui/LoadingUI';
 
 const path = require('path')
 
@@ -64,7 +65,7 @@ const path = require('path')
             </Layout>);
         }
 
-        return null;
+        return <LoadingUI />;
     }
 
     initConfigs() {
@@ -73,7 +74,6 @@ const path = require('path')
     }
 
     initSettings() {
-
         DbContext.getSettings().exec((err: any, doc: Settings[]) => {
             if (err || doc.length == 0) {
                 let initialSettings = new Settings();
