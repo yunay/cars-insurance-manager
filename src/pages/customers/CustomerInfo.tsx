@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Customer } from '../../models/customers/Customer';
+import { Customer, CarInfo } from '../../models/customers/Customer';
 import { observer } from 'mobx-react'
 import { observable, runInAction } from 'mobx';
 import { withRouter } from 'react-router';
@@ -48,8 +48,8 @@ import { NavLink } from 'react-router-dom';
                             <div className="form-row form-group">
                                 <div className="col-4">
                                     {
-                                        this.model.carRegistrationNumbers && this.model.carRegistrationNumbers.length > 0
-                                        ? <MultipleItemInfoPanel items={[...this.model.carRegistrationNumbers]} title={'Регистрационнни номера'} icon={"fas fa-car"} />
+                                        this.model.carRegistrationInfo && this.model.carRegistrationInfo.length > 0
+                                            ? <MultipleItemInfoPanel items={[...this.model.carRegistrationInfo]} displayItem={this.displayCarInfoItem} title={'Информация за превозно средство'} icon={"fas fa-car"} />
                                         : null
                                     }
                                 </div>
@@ -69,11 +69,11 @@ import { NavLink } from 'react-router-dom';
         </>
     }
 
-    onBackBtnClick() {
+    private onBackBtnClick() {
         this.props.history.goBack();
     }
 
-    loadCustomer() {
+    private loadCustomer() {
         DbContext.getCustomers({ id: this.props.match.params.customerId }).exec((err, customer: Customer[]) => {
             if (err) {
 
@@ -100,7 +100,7 @@ import { NavLink } from 'react-router-dom';
         })
     }
 
-    prepareCustomerInsurancesDisplay(){
+    private prepareCustomerInsurancesDisplay(){
         let result:any[] = [];
 
         for (let index = 0; index < this.customerInsurances.length; index++) {
@@ -110,6 +110,10 @@ import { NavLink } from 'react-router-dom';
         }
 
         return result
+    }
+
+    private displayCarInfoItem(carInfoItem: CarInfo) {
+        return `Регистрационен №: ${carInfoItem.registrationNumber}, № на талон: ${carInfoItem.registrationForm} `
     }
 }
 

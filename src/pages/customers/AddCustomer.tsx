@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DbContext, DbResponseType } from '../../data/DataStore'
-import { Customer } from '../../models/customers/Customer';
+import { Customer, CarInfo } from '../../models/customers/Customer';
 import { observer } from 'mobx-react'
 import { observable, runInAction, action } from 'mobx';
 import { NotificationPanel, NotificationType } from '../../common/ui/NotificationPanel';
@@ -15,7 +15,7 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
     private validator: CustomerValidation;
 
     @observable notificationPanel: any;
-    @observable currentCarRegNumber: string;
+    @observable currentCarInfo: CarInfo;
     @observable statements: Statement[];
 
     constructor(props: any) {
@@ -24,8 +24,8 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
         this.handleChange = this.handleChange.bind(this);
         this.addCustomer = this.addCustomer.bind(this);
         this.onBackBtnClick = this.onBackBtnClick.bind(this);
-        this.addCarRegNumber = this.addCarRegNumber.bind(this);
-        this.handleCarRegNumberChange = this.handleCarRegNumberChange.bind(this);
+        this.addCarInfo = this.addCarInfo.bind(this);
+        this.handleCarInfoChange = this.handleCarInfoChange.bind(this);
 
         this.handleStatementChange = this.handleStatementChange.bind(this);
         this.handleStatementSelect = this.handleStatementSelect.bind(this);
@@ -35,7 +35,7 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
 
         this.model = new Customer();
         this.validator = new CustomerValidation();
-        this.currentCarRegNumber = "";
+        this.currentCarInfo = new CarInfo();
 
         this.initStatementsData();
     }
@@ -85,15 +85,15 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
                                 </div>
                             </div>
                             {
-                                this.model.carRegistrationNumbers && this.model.carRegistrationNumbers.length > 0
+                                this.model.carRegistrationInfo && this.model.carRegistrationInfo.length > 0
                                     ? <div className="form-row form-group">
                                         <div className="col-md-12">
                                             <div>Записани регистрационни номера на клиента:</div>
                                             {
-                                                this.model.carRegistrationNumbers.map((carRegNumber, index) => {
+                                                this.model.carRegistrationInfo.map((carInfo, index) => {
                                                     return <div key={index}>
-                                                        <div className="removable-item">{carRegNumber}</div>
-                                                        <button type="button" className="close removable-item-x" onClick={this.removeCarRegNumber.bind(this, index)}>
+                                                        <div className="removable-item">{`Регистрационен №: ${carInfo.registrationNumber}, № на талон: ${carInfo.registrationForm}`}</div>
+                                                        <button type="button" className="close removable-item-x" onClick={this.removeCarInfo.bind(this, index)}>
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
@@ -104,14 +104,18 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
                                     : null
                             }
                             <div className="form-row form-group">
-                                <div className="mr-10">
+                                <div className="col-3">
                                     <label>Регистрационен № на превозно средство</label>
-                                    <input type="text" className="form-control" name="value" value={this.currentCarRegNumber} onChange={this.handleCarRegNumberChange} />
+                                    <input type="text" className="form-control" name="registrationNumber" value={this.currentCarInfo.registrationNumber} onChange={this.handleCarInfoChange} />
                                 </div>
-                                <div>
+                                <div className="col-6">
+                                    <label>№ на талон на превозно средство</label>
+                                    <input type="text" className="form-control" name="registrationForm" value={this.currentCarInfo.registrationForm} onChange={this.handleCarInfoChange} />
+                                </div>
+                                <div className="col-3">
                                     <label>&nbsp;</label>
                                     <div>
-                                        <a href="javascript://" onClick={this.addCarRegNumber} className="btn btn-success"><i className="fas fa-fw fa-plus"></i> Добави регистрационен №</a>
+                                        <a href="javascript://" onClick={this.addCarInfo} className="btn btn-success"><i className="fas fa-fw fa-plus"></i> Добави</a>
                                     </div>
                                 </div>
                             </div>
@@ -123,36 +127,39 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
         </>
     }
 
-    onBackBtnClick() {
+    private onBackBtnClick() {
         this.props.history.goBack();
     }
 
-    handleChange(e: any) {
+    private handleChange(e: any) {
         this.model[e.target.name] = e.target.value;
     }
 
-    addCarRegNumber() {
-        if (!ValidationHelpers.isStringNullOrEmpty(this.currentCarRegNumber))
-            this.model.carRegistrationNumbers.push(this.currentCarRegNumber);
+    @action private addCarInfo() {
+        if (!ValidationHelpers.isStringNullOrEmpty(this.currentCarInfo.registrationNumber)) {
+            this.model.carRegistrationInfo.push(this.currentCarInfo);
+            this.currentCarInfo = new CarInfo();
+        }
     }
 
-    removeCarRegNumber(index: number) {
-        this.model.carRegistrationNumbers.splice(index, 1)
+    private removeCarInfo(index: number) {
+        this.model.carRegistrationInfo.splice(index, 1)
     }
 
-    handleCarRegNumberChange(e: any) {
-        this.currentCarRegNumber = e.target.value;
+    private handleCarInfoChange(e: any) {
+        this.currentCarInfo[e.target.name] = e.target.value;
     }
 
-    addCustomer() {
+    private addCustomer() {
 
         if (this.validator.validate(this.model)) {
             DbContext.addCustomer(this.model).then((response) => {
 
                 let notificationKey = `${+new Date()}_notificationKey`
-                if (response.reponseType == DbResponseType.success)
+                if (response.reponseType == DbResponseType.success) {
                     this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно добавен нов клиент.'} />
-                else
+                    this.model = new Customer();
+                }else
                     this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка при добавяне на нов клиент.'} />
             })
         } else {
@@ -163,29 +170,29 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
 
     //#region Statements AutoComplete
 
-    @action handleStatementSelect(statement: Statement) {
+    @action private handleStatementSelect(statement: Statement) {
         this.model.statement = statement.statementWithType;
         this.model.statementId = statement.id;
     }
 
-    handleStatementChange() {
+    private handleStatementChange() {
         if(this.model.statement != "")
             this.model.statement = "";
     }
 
-    shouldStatementRender(statement: Statement, value: any) {
+    private shouldStatementRender(statement: Statement, value: any) {
         return statement.name.toLowerCase().indexOf(value.toLowerCase()) > -1
     }
 
-    getStatementValue(statement: Statement) {
+    private getStatementValue(statement: Statement) {
         return `${statement.name}`
     }
 
-    renderStatement(statement: Statement) {
+    private renderStatement(statement: Statement) {
         return `${statement.name}`
     }
 
-    initStatementsData(){
+    private initStatementsData(){
         DbContext.getStatements().exec((err, doc) => {
             if (err) {
 

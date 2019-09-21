@@ -155,7 +155,7 @@ import { InsurersPie } from './InsurersPie';
             let vehicle = [];
 
             for (let i = 0; i < this.customers.length; i++) {
-                vehicle.push(...this.customers[i].carRegistrationNumbers);
+                vehicle.push(...this.customers[i].carRegistrationInfo.map(x => x.registrationNumber));
             }
 
             this.vehicleCount = ArrayHelpers.distinct(vehicle).length;

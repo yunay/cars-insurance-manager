@@ -11,6 +11,9 @@ interface SingleItemInfoPanelProps extends InfoPanel {
 
 interface MultipleItemInfoPanelProps extends InfoPanel {
     items: any[];
+
+    /**Когато подаваме колекция с обекти трябва да опишем как да се показват. */
+    displayItem?: (item:any) => any;
 }
 
 export const SingleItemInfoPanel = (props: SingleItemInfoPanelProps) => {
@@ -27,7 +30,7 @@ export const MultipleItemInfoPanel = (props: MultipleItemInfoPanelProps) => {
             {
                 props.items && props.items.length > 0
                     ? props.items.map((item, key) => {
-                        return <div key={key}><i className={`${props.icon} mr-10 text-primary`}></i><span>{item}</span></div>
+                        return <div key={key}><i className={`${props.icon} mr-10 text-primary`}></i><span>{props.displayItem ? props.displayItem(item) : item}</span></div>
                     })
                     : null
             }

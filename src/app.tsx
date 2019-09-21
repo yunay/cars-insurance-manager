@@ -113,7 +113,7 @@ const path = require('path')
 
             this.notificationInterval = setInterval(() => {
                 notify(notification);
-            }, 1000 * 60 * notificationIntervalInHours)
+            }, 1000 * 60 * notificationIntervalInHours * 60)
         }
     }
 

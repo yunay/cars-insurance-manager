@@ -10,7 +10,7 @@ class HeaderImpl extends React.Component<any, any> {
                 <div className="sidebar-brand-icon rotate-n-15">
                     <i className="fas fa-car"></i>
                 </div>
-                <div className="sidebar-brand-text mx-3">Юки<sup>брокер</sup></div>
+                <div className="sidebar-brand-text mx-3">Insurance manager</div>
             </a>
             <hr className="sidebar-divider my-0" />
             <li className={this.getNavLinkClass("/")}>

@@ -1,8 +1,24 @@
 import { observable } from 'mobx';
 
+/**Вноски */
+export class CarInfo {
+
+    constructor(id: string = "", registrationNumber: string = "", registrationForm:string = "") {
+        this.id = id;
+        this.registrationNumber = registrationNumber;
+        this.registrationForm = registrationForm;
+    }
+
+    @observable public id: string;
+
+    @observable public registrationNumber: string
+
+    @observable public registrationForm: string;
+}
+
 export class Customer {
 
-    constructor(carRegistrationNumbers:string[] = [], id: string = "", firstname: string = "", secondname: string = "", thirdname: string = "", phone: string = "", statement: string = "", statementId:string = "") {
+    constructor(carRegistrationInfo: CarInfo[] = [], id: string = "", firstname: string = "", secondname: string = "", thirdname: string = "", phone: string = "", statement: string = "", statementId:string = "") {
 
         this.id = id;
         this.firstname = firstname;
@@ -11,7 +27,7 @@ export class Customer {
         this.phone = phone;
         this.statement = statement;
         this.statementId = statementId;
-        this.carRegistrationNumbers = carRegistrationNumbers;
+        this.carRegistrationInfo = carRegistrationInfo;
         this.isActive = true;
     }
 
@@ -29,7 +45,7 @@ export class Customer {
 
     @observable public statementId: string;
 
-    @observable public carRegistrationNumbers: string[];
+    @observable public carRegistrationInfo: CarInfo[];
 
     @observable public isActive: boolean;
 }
