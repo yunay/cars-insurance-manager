@@ -90,16 +90,6 @@
     "tslint": "5.16.0",
     "typescript": "3.4.5"
   },
-  "build": {
-    "appId": "com.cim.app",
-    "productName": "Cars insurances manager",
-    "nsis": {
-      "allowToChangeInstallationDirectory": true,
-      "oneClick": false
-    },
-    "publish": {
-      "provider": "github"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/yunay/cars-insurance-manager.git"

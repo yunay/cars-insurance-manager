@@ -8,4 +8,4 @@ settings.db
 /.vs
 /build
 /dist
-deploy.config.txt
+electron-builder.yml
