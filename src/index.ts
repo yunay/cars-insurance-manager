@@ -29,10 +29,13 @@ const createWindow = async () => {
     autoUpdater.checkForUpdatesAndNotify();
 
     // Open the DevTools.
-    if (isDevMode) {
-        await installExtension(REACT_DEVELOPER_TOOLS);
-        mainWindow.webContents.openDevTools();
-    }
+    //if (isDevMode) {
+    //    await installExtension(REACT_DEVELOPER_TOOLS);
+    //    mainWindow.webContents.openDevTools();
+    //}
+
+    await installExtension(REACT_DEVELOPER_TOOLS);
+    mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on('closed', () => {
@@ -63,6 +66,10 @@ app.on('activate', () => {
     if (mainWindow === null) {
         createWindow();
     }
+});
+
+ipcMain.on('app_version', (event: any) => {
+    event.sender.send('app_version', { version: app.getVersion() });
 });
 
 autoUpdater.on('update-available', () => {

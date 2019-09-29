@@ -10,63 +10,64 @@
 </head>
 <body>
     <div id="wrapper"></div>
+    <p id="version"></p>
     <div id="notification" class="hidden">
         <p id="message"></p>
-        <button id="close-button" onClick="closeNotification()">
-            Close
+        <button id="close-button" class="btn btn-primary" onClick="closeNotification()">
+            Затвори
         </button>
-        <button id="restart-button" onClick="restartApp()" class="hidden">
-            Restart
+        <button id="restart-button" class="btn btn-primary hidden" onClick="restartApp()">
+            Рестартирай
         </button>
     </div>
 
-    <script>window.exports = module.exports</script>
+    <script type="text/javascript">
+        window.exports = module.exports
+    </script>
     <script type="text/tsx">
         import * as React from 'react';
         import * as ReactDOM from 'react-dom';
         import { AppContainer } from 'react-hot-loader';
         import { HashRouter } from 'react-router-dom';
-        import { ipcRenderer } from 'electron';
+
+        const { ipcRenderer } = require('electron');
+        const version = document.getElementById('version');
 
         let render = () => {
         const { App } = require('./app');
-        const notification = document.getElementById('notification');
-        const message = document.getElementById('message');
-        const restartButton = document.getElementById('restart-button');
-
-        ipcRenderer.on('update_available', () => {
-            ipcRenderer.removeAllListeners('update_available');
-            message.innerText = 'A new update is available. Downloading now...';
-            notification.classList.remove('hidden');
-        });
-
-        ipcRenderer.on('update_downloaded', () => {
-            ipcRenderer.removeAllListeners('update_downloaded');
-            message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?';
-            restartButton.classList.remove('hidden');
-            notification.classList.remove('hidden');
-        });
-
-        function closeNotification() {
-            notification.classList.add('hidden');
-        }
-
-        function restartApp() {
-            ipcRenderer.send('restart_app');
-        }
 
         ReactDOM.render(
         <AppContainer><HashRouter basename={'/'}><App /></HashRouter></AppContainer>, document.getElementById('wrapper'));
         }
 
+        ipcRenderer.send('app_version');
+        ipcRenderer.on('app_version', (event, arg) => {
+        ipcRenderer.removeAllListeners('app_version');
+        version.innerText = 'Версия ' + arg.version;
+        });
+
+        ipcRenderer.on('update_available', () => {
+        ipcRenderer.removeAllListeners('update_available');
+        document.getElementById('message').innerText = 'Има нова версия на програмата. Изтегля се...';
+        document.getElementById('notification').classList.remove('hidden');
+        });
+        ipcRenderer.on('update_downloaded', () => {
+        ipcRenderer.removeAllListeners('update_downloaded');
+        document.getElementById('message').innerText = 'Рестартирай за да обновиш програмата.';
+        document.getElementById('restart-button').classList.remove('hidden');
+        document.getElementById('notification').classList.remove('hidden');
+        });
+
+        function closeNotification() {
+        document.getElementById('notification').classList.add('hidden');
+        }
+
+        function restartApp() {
+        ipcRenderer.send('restart_app');
+        }
+
         render();
         if (module.hot) { module.hot.accept(render); }
-
-        const notification = document.getElementById('notification');
-        const message = document.getElementById('message');
-        const restartButton = document.getElementById('restart-button');
-
-
 
     </script>
 </body>
