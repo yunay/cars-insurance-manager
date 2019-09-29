@@ -1,7 +1,7 @@
 {
   "name": "cars-insurance-manager",
   "productName": "cars-insurance-manager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "My Electron application description",
   "main": "src/index.ts",
   "scripts": {
@@ -98,8 +98,7 @@
       "oneClick": false
     },
     "publish": {
-      "provider": "github",
-      "token": "ffb99a9436970906eca3f40b9722872e20f7ba26"
+      "provider": "github"
     }
   },
   "repository": {
