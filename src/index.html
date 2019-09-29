@@ -13,9 +13,6 @@
     <p id="version"></p>
     <div id="notification" class="hidden">
         <p id="message"></p>
-        <button id="close-button" class="btn btn-primary" onClick="closeNotification()">
-            Затвори
-        </button>
         <button id="restart-button" class="btn btn-primary hidden" onClick="restartApp()">
             Рестартирай
         </button>
@@ -57,10 +54,6 @@
         document.getElementById('restart-button').classList.remove('hidden');
         document.getElementById('notification').classList.remove('hidden');
         });
-
-        function closeNotification() {
-        document.getElementById('notification').classList.add('hidden');
-        }
 
         function restartApp() {
         ipcRenderer.send('restart_app');
