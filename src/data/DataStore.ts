@@ -4,6 +4,9 @@ import { Statement, StatementType } from '../models/common/Statement';
 import { Customer } from '../models/customers/Customer';
 import { Insurance } from '../models/insurances/Insurance';
 import { Insurer } from '../models/insurers/Insurer';
+import { app, remote } from 'electron'
+
+const electronUserDataPath = (app || remote.app).getPath('userData');
 
 export enum DbResponseType {
     withError = 1,
@@ -22,11 +25,11 @@ export class DataResult {
 }
 
 var db = {
-    customers: new Datastore({ filename: './src/data/customers.db' }),
-    insurances: new Datastore({ filename: './src/data/insurances.db' }),
-    insurers: new Datastore({ filename: './src/data/insurers.db' }),
-    statements: new Datastore({ filename: './src/data/statements.db' }),
-    settings: new Datastore({ filename: './src/data/settings.db' })
+    customers: new Datastore({ filename: `${electronUserDataPath}/DbStore/customers.db` }),
+    insurances: new Datastore({ filename: `${electronUserDataPath}/DbStore/insurances.db` }),
+    insurers: new Datastore({ filename: `${electronUserDataPath}/DbStore/insurers.db` }),
+    statements: new Datastore({ filename: `${electronUserDataPath}/DbStore/statements.db` }),
+    settings: new Datastore({ filename: `${electronUserDataPath}/DbStore/settings.db` })
 };
 
 db.customers.loadDatabase();
@@ -110,7 +113,7 @@ export const DbContext = {
 
     getInsurers: (query?: any) => query ? db.insurers.find(query) : db.insurers.find({}),
 
-    getInsurersPagesCount:(query?: any) => query ? db.insurers.count(query) : db.insurers.count({}),
+    getInsurersPagesCount: (query?: any) => query ? db.insurers.count(query) : db.insurers.count({}),
 
     getInsurerById: (insurerId: string) => db.insurers.find({ id: insurerId }),
 
