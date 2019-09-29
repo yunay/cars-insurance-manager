@@ -99,6 +99,7 @@
     },
     "publish": {
       "provider": "github"
+    }
   },
   "repository": {
     "type": "git",
