@@ -1,33 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link href="../css/all.min.css" rel="stylesheet" crossorigin="anonymous">
-  <link href="../css/vendor.min.css" rel="stylesheet" crossorigin="anonymous">
-  <link href="../css/custom.css" rel="stylesheet" crossorigin="anonymous">
-  <link href="../css/react-datetime.css" rel="stylesheet" crossorigin="anonymous">
-  <link href="../css/react-confirm-alert.css" rel="stylesheet" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="../css/all.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="../css/vendor.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="../css/custom.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="../css/react-datetime.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="../css/react-confirm-alert.css" rel="stylesheet" crossorigin="anonymous">
 </head>
-
 <body>
     <div id="wrapper"></div>
+    <div id="notification" class="hidden">
+        <p id="message"></p>
+        <button id="close-button" onClick="closeNotification()">
+            Close
+        </button>
+        <button id="restart-button" onClick="restartApp()" class="hidden">
+            Restart
+        </button>
+    </div>
+
+    <script>window.exports = module.exports</script>
+    <script type="text/tsx">
+        import * as React from 'react';
+        import * as ReactDOM from 'react-dom';
+        import { AppContainer } from 'react-hot-loader';
+        import { HashRouter } from 'react-router-dom';
+        import { ipcRenderer } from 'electron';
+
+        let render = () => {
+        const { App } = require('./app');
+        const notification = document.getElementById('notification');
+        const message = document.getElementById('message');
+        const restartButton = document.getElementById('restart-button');
+
+        ipcRenderer.on('update_available', () => {
+            ipcRenderer.removeAllListeners('update_available');
+            message.innerText = 'A new update is available. Downloading now...';
+            notification.classList.remove('hidden');
+        });
+
+        ipcRenderer.on('update_downloaded', () => {
+            ipcRenderer.removeAllListeners('update_downloaded');
+            message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?';
+            restartButton.classList.remove('hidden');
+            notification.classList.remove('hidden');
+        });
+
+        function closeNotification() {
+            notification.classList.add('hidden');
+        }
+
+        function restartApp() {
+            ipcRenderer.send('restart_app');
+        }
+
+        ReactDOM.render(
+        <AppContainer><HashRouter basename={'/'}><App /></HashRouter></AppContainer>, document.getElementById('wrapper'));
+        }
+
+        render();
+        if (module.hot) { module.hot.accept(render); }
+
+        const notification = document.getElementById('notification');
+        const message = document.getElementById('message');
+        const restartButton = document.getElementById('restart-button');
+
+
+
+    </script>
 </body>
-<script>window.exports = module.exports</script>
-<script type="text/tsx">
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import {AppContainer} from 'react-hot-loader';
-import { HashRouter } from 'react-router-dom';
-
-let render = () => {
-  const { App } = require('./app');
-
-  ReactDOM.render(<AppContainer><HashRouter basename={'/'}><App /></HashRouter></AppContainer>, document.getElementById('wrapper'));
-}
-
-render();
-if (module.hot) { module.hot.accept(render); }
-</script>
-
 </html>

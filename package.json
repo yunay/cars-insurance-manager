@@ -1,14 +1,15 @@
 {
   "name": "cars-insurance-manager",
   "productName": "cars-insurance-manager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "My Electron application description",
   "main": "src/index.ts",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "publish": "electron-forge publish",
+    "build": "electron-builder build --win --publish never",
+    "deploy": "electron-builder build --win --publish always",
     "win": "electron-builder -w",
     "lint": "tslint --project tsconfig.json --type-check --force"
   },
@@ -60,6 +61,7 @@
     "chart.js": "2.8.0",
     "electron-compile": "6.4.4",
     "electron-devtools-installer": "2.2.4",
+    "electron-updater": "4.1.2",
     "jquery": "3.4.1",
     "mobx": "5.9.4",
     "mobx-react": "5.4.3",
@@ -94,6 +96,14 @@
     "nsis": {
       "allowToChangeInstallationDirectory": true,
       "oneClick": false
+    },
+    "publish": {
+      "provider": "github",
+      "token": "ffb99a9436970906eca3f40b9722872e20f7ba26"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yunay/cars-insurance-manager.git"
   }
 }
