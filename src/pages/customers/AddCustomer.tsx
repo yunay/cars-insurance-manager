@@ -9,6 +9,7 @@ import { AutoComplete } from '../../common/ui/AutoComplete';
 import { Statement } from '../../models/common/Statement';
 import { CustomerValidation } from '../../models/Validations';
 import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
+import { ObjectHelpers } from '../../common/helpers/Helpers';
 
 @observer class AddCustomerImpl extends React.Component<any, any>{
     private model: Customer;
@@ -17,6 +18,7 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
     @observable notificationPanel: any;
     @observable currentCarInfo: CarInfo;
     @observable statements: Statement[];
+    @observable statementAutoCompleteKey: string;
 
     constructor(props: any) {
         super(props);
@@ -36,6 +38,7 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
         this.model = new Customer();
         this.validator = new CustomerValidation();
         this.currentCarInfo = new CarInfo();
+        this.statementAutoCompleteKey = ObjectHelpers.generateGuid();
 
         this.initStatementsData();
     }
@@ -71,6 +74,7 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
                                 <div className="col-md-3">
                                     <label className="required-field">Град / село</label>
                                     <AutoComplete
+                                        key={this.statementAutoCompleteKey}
                                         items={this.statements && this.statements.length > 0 ? this.statements : null}
                                         getItemValue={this.getStatementValue}
                                         onChange={this.handleStatementChange}
@@ -104,15 +108,15 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
                                     : null
                             }
                             <div className="form-row form-group">
-                                <div className="col-3">
+                                <div className="col-5">
                                     <label>Регистрационен № на превозно средство</label>
                                     <input type="text" className="form-control" name="registrationNumber" value={this.currentCarInfo.registrationNumber} onChange={this.handleCarInfoChange} />
                                 </div>
-                                <div className="col-6">
+                                <div className="col-5">
                                     <label>№ на талон на превозно средство</label>
                                     <input type="text" className="form-control" name="registrationForm" value={this.currentCarInfo.registrationForm} onChange={this.handleCarInfoChange} />
                                 </div>
-                                <div className="col-3">
+                                <div className="col-2">
                                     <label>&nbsp;</label>
                                     <div>
                                         <a href="javascript://" onClick={this.addCarInfo} className="btn btn-success"><i className="fas fa-fw fa-plus"></i> Добави</a>
@@ -157,8 +161,11 @@ import { ValidationHelpers } from '../../common/helpers/ValidationHelpers';
 
                 let notificationKey = `${+new Date()}_notificationKey`
                 if (response.reponseType == DbResponseType.success) {
-                    this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно добавен нов клиент.'} />
-                    this.model = new Customer();
+                    runInAction(() => {
+                        this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно добавен нов клиент.'} />
+                        this.model = new Customer();
+                        this.statementAutoCompleteKey = ObjectHelpers.generateGuid();
+                    })
                 }else
                     this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка при добавяне на нов клиент.'} />
             })

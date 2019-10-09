@@ -66,9 +66,10 @@ import { InsurerValidation } from '../../models/Validations';
             DbContext.addInsurer(this.model).then((response) => {
 
                 let notificationKey = `${+new Date()}_notificationKey`
-                if (response.reponseType == DbResponseType.success)
+                if (response.reponseType == DbResponseType.success) {
                     this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.success} isDismisable={true} text={'Успешно добавен застраховател.'} />
-                else
+                    this.model.name = "";
+                } else
                     this.notificationPanel = <NotificationPanel key={notificationKey} notificationType={NotificationType.danger} isDismisable={true} text={'Възникна грешка при добавяне на нов застраховател.'} />
             })
         } else {

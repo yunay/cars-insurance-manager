@@ -108,15 +108,15 @@ import { CustomerValidation } from '../../models/Validations';
                                             : null
                                     }
                                     <div className="form-row form-group">
-                                        <div className="col-3">
+                                        <div className="col-5">
                                             <label>Регистрационен № на превозно средство</label>
                                             <input type="text" className="form-control" name="registrationNumber" value={this.currentCarInfo.registrationNumber} onChange={this.handleCarInfoChange} />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-5">
                                             <label>№ на талон на превозно средство</label>
                                             <input type="text" className="form-control" name="registrationForm" value={this.currentCarInfo.registrationForm} onChange={this.handleCarInfoChange} />
                                         </div>
-                                        <div className="col-3">
+                                        <div className="col-2">
                                             <label>&nbsp;</label>
                                             <div>
                                                 <a href="javascript://" onClick={this.addCarInfo} className="btn btn-success"><i className="fas fa-fw fa-plus"></i> Добави</a>
