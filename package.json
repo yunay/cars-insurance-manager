@@ -1,7 +1,7 @@
 {
   "name": "cars-insurance-manager",
   "productName": "cars-insurance-manager",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "My Electron application description",
   "main": "src/index.ts",
   "scripts": {
